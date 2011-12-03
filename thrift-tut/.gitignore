@@ -1,0 +1,5 @@
+gen-cpp/
+gen-perl/
+gen-php/
+php/
+UserManager_server
