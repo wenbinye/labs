@@ -1,0 +1,181 @@
+#!/usr/bin/env perl
+# Author: Ye Wenbin <wenbinye@163.com>
+# Created: 17 Jun 2013
+# Version: 0.01
+
+use warnings;
+use strict;
+use Time::HiRes qw(usleep);
+use File::stat;
+use File::Spec;
+use Getopt::Long;
+use Pod::Usage;
+
+=head1 tailfile
+
+tailfile --- Print file content since last time
+
+=head1 SYNOPSIS
+
+tailfile [options] file
+
+Options:
+
+  -d --data-dir     Directory to store file offset information
+  -m --max-size     Max size of file to read
+  -l --line-feed    Line feed for the file. Set to empty if don't care about it.
+  -b --buffer-size  Size of content for every read operation
+  -s --sleep-interval Sleep time for every read operation(microseconds, i.e 1000 means 1 ms)
+  -k --keep-days    Days of offset information to keep
+
+=cut
+
+my $config = {
+    'data-dir' => '/var/run/tailfile',
+    'buffer-size' => 64*1024,
+    'max-size' => 50*1024*1024,
+    'line-feed' => $/,
+    'sleep-interval' => -1,
+    'keep-days' => 2,
+};
+GetOptions($config,
+           'data-dir=s',
+           'buffer-size=i',
+           'max-size=i',
+           'line-feed=s',
+           'sleep-interval=i',
+           'keep-days=i',
+           'help');
+if ( $config->{help} ) {
+    pod2usage();
+}
+
+my $file = shift;
+if ( !$file ) {
+    pod2usage(-1);
+}
+if ( !-r $file ) {
+    die "Cannot read file '$file': $!\n";
+}
+my $data_dir = $config->{'data-dir'};
+if ( !-d $data_dir ) {
+    die "Data directory '$data_dir' is not exists!\n";
+}
+
+clean_offset_files($data_dir, $config->{'keep-days'});
+my $fstat = stat($file);
+my ($start, $end) = (0, $fstat->size);
+my $offset = read_offset($data_dir, $file);
+if ( $offset && $offset->{ino} == $fstat->ino ) {
+    $start = $offset->{end};
+}
+if ( $start > $end ) {
+    die "File offset not match: start=$start, end=$end\n";
+    exit;
+}
+open(my $fh, "<", $file) or die "Can't open file $file: $!\n";
+binmode($fh, ':raw');
+binmode(\*STDOUT, ':raw');
+$start = seek_start($config, $fh, $start, $end);
+$offset = {
+    'ino' => $fstat->ino,
+    'start' => $start,
+    'end' => $end
+};
+my $buffer_size = $config->{'buffer-size'};
+my $buffer;
+my $sleep_interval = $config->{'sleep-interval'};
+do {
+    if ( $end - $start > $buffer_size ) {
+        $start += $buffer_size;
+    } else {
+        $buffer_size = $end - $start;
+        $start = $end;
+    }
+    read($fh, $buffer, $buffer_size);
+    print $buffer;
+    if ( $sleep_interval > 0 ) {
+        usleep($sleep_interval);
+    }
+} while ( $start < $end );
+write_offset($data_dir, $file, $offset);
+
+sub read_offset {
+    my ($data_dir, $file) = @_;
+    my $path = get_offset_path($data_dir, $file);
+    if ( -e $path ) {
+        open(my $fh, "<", $path) or die "Can't open file $path: $!";
+        my $content = do { local $/ = undef; <$fh> };
+        close($fh);
+        my ($ino, $start, $end) = split "\x01", $content;
+        return {ino => $ino, start => $start, end => $end};
+    }
+}
+
+sub write_offset {
+    my ($data_dir, $file, $offset) = @_;
+    my $path = get_offset_path($data_dir, $file);
+    open(my $fh, ">", $path) or die "Can't create file $path: $!";
+    print {$fh} join("\x01", $offset->{ino}, $offset->{start}, $offset->{end});
+    close($fh);
+}
+
+sub get_offset_path {
+    my ($data_dir, $file) = @_;
+    my $name = File::Spec->rel2abs($file);
+    $name =~ tr/a-zA-Z0-9//dc;
+    if ( !$name ) {
+        die "Cannot create offset file for '$file': $!\n";
+    }
+    return File::Spec->catfile($data_dir, $name.'.data');
+}
+
+sub seek_start {
+    my ($config, $fh, $start, $end) = @_;
+    my $max_size = $config->{'max-size'};
+    if ( $max_size > 0 && ($end-$start) > $max_size ) {
+        my $lf = $config->{'line-feed'};
+        if ( $lf ) {
+            my $bytes = length($lf);
+            $start = $end - $max_size-$bytes;
+            if ( $start < 0 ) {
+                return 0;
+            }
+            seek($fh, $start, 0) or die "Cannot seek position $start: $!\n";
+            my $ch;
+            while ( read($fh, $ch, $bytes) && $ch ne $lf) {
+                $start += $bytes;
+            }
+            return $start;
+        } else {
+            $start = $end - $max_size;
+        }
+    }
+    seek($fh, $start, 0) or die "Cannot seek position $start: $!\n";
+    return $start;
+}
+
+sub clean_offset_files {
+    my ($data_dir, $keep_days) = @_;
+    my $markfile = File::Spec->catfile($data_dir, '.gc');
+    if ( !-e $markfile ) {
+        open(my $fh, ">", $markfile) or die "Can't create file $markfile: $!";
+        close $fh;
+        return;
+    }
+    my $now = time;
+    my $check_time = $now - $keep_days * 86400;
+    my $fstat = stat($markfile);
+    if ( $fstat->mtime > $check_time ) {
+        return;
+    }
+    opendir(DIR, $data_dir) or die "Can't open directory $data_dir: $!";
+    while ( my $file = readdir(DIR) ) {
+        next if $file =~ /^\./;
+        $file = File::Spec->catfile($data_dir, $file);
+        if ( -f $file && stat($file)->mtime <= $check_time ) {
+            unlink($file);
+        }
+    }
+    utime($now, $now, $markfile);
+}
