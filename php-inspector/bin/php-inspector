@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+/**
+ * php inspector
+ */
+require(__DIR__ . '/../lib/Php/Inspector/Autoloader.php');
+
+Php\Inspector\Autoloader::getInstance()->register();
+$app = new \Php\Inspector;
+$app->dispatch();
+
+
