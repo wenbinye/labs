@@ -181,6 +181,7 @@ Examples:
 
   List classes implement interfaces those match Phalcon:
     php-inspector -i Phalcon
+
 EOF;
     }
 }
