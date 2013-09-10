@@ -3,6 +3,7 @@ namespace Php;
 
 use Php\Inspector\TreeNode;
 use Php\Inspector\Tree;
+use Php\Inspector\Declaration;
 
 class Inspector
 {
@@ -12,7 +13,9 @@ class Inspector
             'c:' => 'constant:',
             't:' => 'tree:',
             'i:' => 'interface:',
-            'h' => 'help'
+            'd:' => 'declaration:',
+            'b:' => 'bootstrap:',
+            'h' => 'help',
         );
         $shortopts = '';
         $longopts = array();
@@ -41,12 +44,19 @@ class Inspector
         $args = $this->parseArgv();
         if ( isset($args['help']) ) {
             $this->usage();
-        } elseif ( !empty($args['constant']) ) {
+            return;
+        }
+        if ( !empty($args['bootstrap']) ) {
+            require($args['bootstrap']);
+        }
+        if ( !empty($args['constant']) ) {
             $this->listConstant($args['constant']);
         } elseif ( !empty($args['tree']) ) {
             $this->listClassTree($args['tree']);
         } elseif ( !empty($args['interface']) ) {
             $this->listInterfaceClasses($args['interface']);
+        } elseif ( !empty($args['declaration']) ) {
+            $this->showDeclaration($args['declaration']);
         } else {
             $this->usage();
         }
@@ -147,6 +157,15 @@ class Inspector
         }
     }
 
+    public function showDeclaration($class)
+    {
+        $ret = Declaration::klass($class);
+        if ( null === $ret ) {
+            die("Class '{$class}' does not exists!");
+        }
+        echo $ret;
+    }
+    
     public function usage()
     {
         echo <<<EOF
@@ -156,8 +175,10 @@ Usage:
 
 Options:
 
-    --constant -c query  List constants
-    --tree     -t query  List class hierachy tree
+    --constant    -c query  List constants
+    --tree        -t query  List class hierachy tree
+    --interface   -i query  List classes implement the interface
+    --declaration -d query  Show declaration of the class 
 
 Examples:
 
@@ -181,6 +202,9 @@ Examples:
 
   List classes implement interfaces those match Phalcon:
     php-inspector -i Phalcon
+
+  Show class declaration:
+    php-inspector -d Phalcon\Config
 
 EOF;
     }

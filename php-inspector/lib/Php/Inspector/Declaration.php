@@ -41,14 +41,50 @@ class Declaration
         }
         $refl = new \ReflectionClass($class);
         $indent = '    ';
-        $php = 'class ' . $refl->getName();
+        
+        $classAttributes = "";
+        if ($refl->isInterface()) {
+            $classAttributes .= "interface ";
+        } else {
+            if ($refl->isFinal()) {
+                $classAttributes .= "final ";
+            }
+            if ($refl->isAbstract()) {
+                $classAttributes .= "abstract ";
+            }
+            $classAttributes .= "class ";
+        }
+        $php = $classAttributes . $refl->getName();
         if ($parent = $refl->getParentClass()) {
             $php .= ' extends ' . $parent->getName();
         }
-        $php .= PHP_EOL . '{' . PHP_EOL;
-        foreach ($refl->getProperties() as $property) {
-            $php .= $indent . '$' . $property->getName() . ';' . PHP_EOL;
+        
+        if ( $interfaces = $refl->getInterfaceNames() ) {
+            $php .= " implements\n" . $indent . join(",\n".$indent, $interfaces);
         }
+        $php .= PHP_EOL . '{' . PHP_EOL;
+
+        /* constants */
+        if ( $constants = $refl->getConstants() ) {
+            foreach ($constants as $k => $v) {
+                $php .= $indent . "const " . $k . " = " . $v . ";" . PHP_EOL;
+            }
+            $php .= PHP_EOL;
+        }
+
+        if ( $properties = $refl->getProperties() ) {
+            $count = 0;
+            foreach ( $properties as $p) {
+                if ( $p->isPublic() ) {
+                    $count++;
+                    $php .= $indent . ($p->isStatic() ? 'static ' : '' )
+                        . 'public $' . $p->getName() . ';' . PHP_EOL;
+                }
+            }
+            if ( $count > 0 )
+                $php .= PHP_EOL;
+        }
+        
         foreach ($refl->getMethods() as $method) {
             if ($method->isPublic()) {
                 if ($method->getDocComment()) {
@@ -71,7 +107,7 @@ class Declaration
                     }
                     $php .= '$' . $parameter->getName();
                     if ($parameter->isDefaultValueAvailable()) {
-                        $php .= ' = ' . $parameter->getDefaultValue();
+                        $php .= '=' . str_replace("\n", " ", var_export($parameter->getDefaultValue(), true));
                     }
                 }
                 $php .= ') {}' . PHP_EOL;
