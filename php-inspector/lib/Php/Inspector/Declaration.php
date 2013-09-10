@@ -90,7 +90,7 @@ class Declaration
                 if ($method->getDocComment()) {
                     $php .= $indent . $method->getDocComment() . PHP_EOL;                
                 }
-                $php .= $indent . 'public function ';
+                $php .= $indent . ($method->isStatic() ? 'static ' : '') . 'public function ';
                 if ($method->returnsReference()) {
                     $php .= '&';
                 }
