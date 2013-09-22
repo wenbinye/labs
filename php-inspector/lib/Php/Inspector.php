@@ -62,22 +62,28 @@ class Inspector
         }
     }
 
+    private function displayTree($tree)
+    {
+        $render = new Tree\AsciiRender($tree);
+        $render->render();
+    }
+    
     public function listClassTree($match)
     {
+        $tree = new Tree;
         $classes = array();
         foreach ( get_declared_classes() as $class_name ) {
             if ( strpos($class_name, $match) !== false ) {
-                $node = TreeNode::find($class_name);
+                $node = $tree->find($class_name);
                 $class = new \ReflectionClass($class_name);
                 $parent_class = $class->getParentClass();
                 if ( $parent_class ) {
-                    $parent = TreeNode::find($parent_class->getName());
+                    $parent = $tree->find($parent_class->getName());
                     $node->setParent($parent);
                 }
             }
         }
-        $tree = new Tree\Ascii(TreeNode::getRoot());
-        $tree->render();
+        $this->displayTree($tree);
     }
 
     public function listInterfaceClasses($match)
@@ -85,25 +91,25 @@ class Inspector
         $interfaces = array();
         foreach ( get_declared_interfaces() as $name ) {
             if ( strpos($name, $match) !== false ) {
-                $interfaces[$name] = array();
+                $interfaces[$name] = 1;
             }
         }
         if ( !empty($interfaces) ) {
+            $tree = new Tree;
+            $autoId = 1;
             foreach ( get_declared_classes() as $class_name ) {
                 $class = new \ReflectionClass($class_name);
                 $implements = $class->getInterfaceNames();
                 if ( !empty($implements) ) {
                     foreach ( $implements as $interface ) {
                         if ( isset($interfaces[$interface]) ) {
-                            $interfaces[$interface][] = $class_name;
+                            $node = $tree->makeNode($autoId++, null, array('name' => $class_name));
+                            $node->setParent($tree->find($interface));
                         }
                     }
                 }
             }
-            foreach ( $interfaces as $name => $classes ) {
-                echo "Interface $name\n";
-                echo "\t", implode("\n\t", $classes), "\n\n";
-            }
+            $this->displayTree($tree);
         } else {
             echo "No matches!\n";
         }

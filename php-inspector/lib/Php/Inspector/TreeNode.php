@@ -3,50 +3,72 @@ namespace Php\Inspector;
 
 class TreeNode
 {
-    private static $NODES;
-    private static $ROOT;
-    
-    private $children;
-    private $parent;
-    private $id;
-    private $data;
+    protected $tree;
+    protected $children;
+    protected $parent;
+    protected $id;
+    protected $attributes;
 
-    public function __construct($id, $parent=null, $children=array(), $data=null)
+    public function __construct($tree, $id, $parent, $attributes=array(), $children=array())
     {
-        $this->children = $children;
+        $this->tree = $tree;
         $this->id = $id;
-        $this->data = $data;
-        if ( !isset($parent) ) {
-            $parent = self::getRoot();
-        }
+        $this->children = $children;
+        $this->attributes = $attributes;
         $this->parent = $parent;
         if ( $parent ) {
             $parent->addChild($this);
         }
     }
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    public function getName()
+    {
+        return isset($this->attributes['name']) ? $this->attributes['name'] : $this->getId();
+    }
+    
     public function getId()
     {
         return $this->id;
     }
 
-    public function getData()
+    public function getAttributes()
     {
-        return $this->data;
+        return $this->attributes;
     }
 
-    public function setData($data)
+    public function getAttribute($name, $default=null)
     {
-        $this->data = $data;
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+    }
+    
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+        return $this;
     }
 
+    public function setAttribute($name, $value)
+    {
+        if ( !isset($value) ) {
+            unset($this->attributes[$name]);
+        } else {
+            $this->attributes[$name] = $value;
+        }
+        return $this;
+    }
+    
     public function setParent($parent)
     {
         if ( $this->parent ) {
             $this->parent->removeChild($this);
         }
-        $this->parent = $parent;
         $parent->addChild($this);
+        return $this;
     }
 
     public function getParent()
@@ -58,6 +80,7 @@ class TreeNode
     {
         $this->children = array();
         $this->addChildren($children);
+        return $this;
     }
     
     public function addChildren($nodes)
@@ -65,16 +88,20 @@ class TreeNode
         foreach ( $nodes as $node ) {
             $this->addChild($node);
         }
+        return $this;
     }
 
     public function addChild(TreeNode $node)
     {
         $this->children[$node->getId()] = $node;
+        $node->parent = $this;
+        return $this;
     }
 
     public function removeChild(TreeNode $node)
     {
         unset($this->children[$node->getId()]);
+        return $this;
     }
     
     public function hasChildren()
@@ -85,21 +112,5 @@ class TreeNode
     public function getChildren()
     {
         return $this->children;
-    }
-
-    public static function getRoot()
-    {
-        if ( !isset(self::$ROOT) ) {
-            self::$ROOT = new self('ROOT', false);
-        }
-        return self::$ROOT;
-    }
-    
-    public static function find($id)
-    {
-        if ( !isset(self::$NODES[$id]) ) {
-            self::$NODES[$id] = new self($id);
-        }
-        return self::$NODES[$id];
     }
 }

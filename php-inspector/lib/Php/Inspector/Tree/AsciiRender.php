@@ -1,15 +1,8 @@
 <?php
 namespace Php\Inspector\Tree;
 
-class Ascii
+class AsciiRender extends BaseRender
 {
-    private $tree;
-
-    public function __construct($tree)
-    {
-        $this->tree = $tree;
-    }
-
     public function render($return=false)
     {
         if ( $return ) {
@@ -27,7 +20,7 @@ class Ascii
         $children = array_values($node->getChildren());
         $num = count($children)-1;
         echo $indent, ($level > 0 ? ' ' . ($isLast ? '`' : '|') . '-' : ''),
-            ($num==-1 ? ' ' : '[-] '), $node->getId(), "\n";
+            ($num==-1 ? ' ' : '[-] '), $node, "\n";
         if ( $level > 0 ) {
             $indent .= ($isLast ? '   ' : ' | ');
         }
