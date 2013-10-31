@@ -1,0 +1,13 @@
+{
+  "name": "ywb-di",
+  "description": "A simple depency inject library",
+  "require" : {
+  },
+  "repositories": [
+  ],
+  "autoload": {
+    "psr-0": {
+      "Ywb": "lib"
+    }
+  }
+}
