@@ -1,0 +1,7 @@
+A command line framework for php
+--------------------------------
+
+   #!/usr/bin/env php
+   <?php
+   $cli = new Ruyitao\Cli\Runner;
+   $cli->run();
