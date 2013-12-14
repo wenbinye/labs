@@ -1,0 +1,12 @@
+{
+  "name": "php-phalcon",
+  "description": "Pure php implement of Phalcon Framework",
+  "require" : {
+    "php" : "5.3"
+  },
+  "autoload": {
+    "psr-0": {
+      "Phalcon": "src"
+    }
+  }
+}

@@ -1,13 +1,17 @@
 <?php
-namespace Ywb;
+namespace Phalcon;
 
+/**
+ * 兼容 Phalcon\DI 的 php 实现
+ * @see http://docs.phalconphp.com/en/latest/reference/di.html
+ */
 class DI implements \ArrayAccess
 {
     private static $default;
     private $factories;
 
-    protected $definitions;
-    protected $shared;
+    protected $definitions = array();
+    protected $shared = array();
     protected $values;
 
     public static function getDefault()
@@ -38,6 +42,11 @@ class DI implements \ArrayAccess
             return new DI\Service($this, $name, $this->definitions[$name], $this->shared[$name]);
         }
     }
+
+    public function has($name)
+    {
+        return isset($this->definitions[$name]);
+    }
     
     public function set($name, $definition, $shared=false)
     {
@@ -57,6 +66,14 @@ class DI implements \ArrayAccess
             return $this->resolve($name);
         }
     }
+
+    public function getShared($name)
+    {
+        if ( isset($this->values[$name]) ) {
+            return $this->values[$name];
+        }
+        return $this->values[$name] = call_user_func_array(array($this, 'get'), func_get_args());
+    }
     
     public function setShared($name, $definition)
     {
@@ -75,15 +92,13 @@ class DI implements \ArrayAccess
 
     protected function resolve($name, $args=array())
     {
-        if ( !array_key_exists($name, $this->definitions) ) {
-            throw new \InvalidArgumentException(sprintf('Identifier "%s" is not defined.', $name));
-        }
-        if ( $this->shared[$name] && isset($this->values[$name]) ) {
+        if ( isset($this->shared[$name], $this->values[$name]) && $this->shared[$name] ) {
             return $this->values[$name];
         }
-        $resolved = $this->createInstance($this->definitions[$name], $args);
+        $def = array_key_exists($name, $this->definitions) ? $this->definitions[$name] : array('className' => $name);
+        $resolved = $this->createInstance($def, $args);
         if ( isset($resolved) ) {
-            if ( $this->shared[$name] ) {
+            if ( isset($this->shared[$name]) && $this->shared[$name] ) {
                 $this->values[$name] = $resolved;
             }
         } else {
@@ -130,7 +145,20 @@ class DI implements \ArrayAccess
                         }
                     }
                 }
+                if ( isset($def['properties']) ) {
+                    foreach ( $def['properties'] as $prop ) {
+                        if ( isset($prop['name'], $prop['value']) ) {
+                            $name = $prop['name'];
+                            $resovled->$name = $this->resolveValue($prop['value']);
+                        }
+                    }
+                }
             }
+        } else {
+            $resovled = $def;
+        }
+        if ( is_object($resovled) && $resovled instanceof DI\InjectionAwareInterface ) {
+            $resovled->setDI($this);
         }
         return $resovled;
     }
@@ -142,6 +170,26 @@ class DI implements \ArrayAccess
         }
         return $this->factories[$class] = new $class($this);
     }
+
+    protected function resolveValue($def)
+    {
+        if ( !isset($def['type']) ) {
+            throw new \RuntimeException("Invalid arguments: no type");
+        }
+        switch ( $def['type'] ) {
+        case 'parameter':
+            return $def['value'];
+            break;
+        case 'service':
+            return $this->get($def['name']);
+            break;
+        case 'instance':
+            return $this->createInstance($def);
+            break;
+        default:
+            throw new \RuntimeException("Invalid arguments: unknown type '{$def['type']}'");
+        }
+    }
     
     protected function resolveArguments($defs)
     {
@@ -150,22 +198,7 @@ class DI implements \ArrayAccess
         }
         $args = array();
         foreach ( $defs as $def ) {
-            if ( !isset($def['type']) ) {
-                throw new \RuntimeException("Invalid arguments: no type");
-            }
-            switch ( $def['type'] ) {
-                case 'parameter':
-                    $args[] = $def['value'];
-                    break;
-                case 'service':
-                    $args[] = $this->get($def['name']);
-                    break;
-                case 'instance':
-                    $args[] = $this->createInstance($def);
-                    break;
-                default:
-                    throw new \RuntimeException("Invalid arguments: unknown type '{$def['type']}'");
-            }
+            $args[] = $this->resolveValue($def);
         }
         return $args;
     }
@@ -183,7 +216,7 @@ class DI implements \ArrayAccess
     }
 }
 
-namespace Ywb\DI;
+namespace Phalcon\DI;
 
 class Service
 {
@@ -227,3 +260,4 @@ class Service
         $this->di->set($this->name, $this->definition, $this->shared);
     }
 }
+

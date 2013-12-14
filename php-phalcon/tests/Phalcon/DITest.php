@@ -1,20 +1,13 @@
 <?php
-namespace Ywb;
+namespace Phalcon;
+
+use Phalcon\DI;
 
 class DITest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         Object::$count = 0;
-    }
-    
-    function testSet()
-    {
-        $di = new DI;
-        $val = array('1');
-        $di->set('config', $val);
-        $this->assertEquals($val, $di->get('config'));
-        $this->assertEquals($val, $di->getConfig());
     }
 
     function testSetClosure()
@@ -103,28 +96,33 @@ class DITest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(10, $di->getConfig(10)->id);
     }
 
-    function testAutoload()
+    function testInjectProperties()
     {
         $di = new DI;
         $di->set('config', array(
-            'autoload' => __NAMESPACE__ . '\ObjectFactory'
+            'className' => __NAMESPACE__.'\Object',
+            'properties' => array(
+                array('name'=>'id', 'value' => array('type'=>'parameter', 'value'=>10))
+            )
         ));
-        $this->assertEquals(10, $di->getConfig(10)->id);
+        $this->assertEquals(10, $di->getConfig()->id);
     }
-}
 
-class ObjectFactory
-{
-    protected $di;
-    
-    public function __construct($di)
+    function testSetObj()
     {
-        $this->di = $di;
+        $di = new DI;
+        $di->setShared('config', new Object(10));
+        $this->assertEquals(10, $di->getConfig()->id);
     }
-    
-    function getConfig($id)
+
+    function testClassName()
     {
-        return new Object($id);
+        $di = new DI;
+        $di->set('obj', array(
+            'className' => __NAMESPACE__ .'\InjectObject'
+        ));
+        $i = $di->getObj();
+        $this->assertTrue($i instanceof InjectObject);
     }
 }
 
@@ -147,3 +145,17 @@ class Object
     }
 }
 
+class InjectObject implements DI\InjectionAwareInterface
+{
+    private $di;
+    
+    public function getDi()
+    {
+        return $this->di;
+    }
+
+    public function setDi($di)
+    {
+        $this->di = $di;
+    }
+}
