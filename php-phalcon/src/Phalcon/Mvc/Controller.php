@@ -1,24 +1,8 @@
 <?php
 namespace Phalcon\Mvc;
 
-use Phalcon\DI;
+use Phalcon\DI\Injectable;
 
-class Controller
+class Controller extends Injectable
 {
-    private $di;
-
-    public function getDI()
-    {
-        if ( !isset($this->di) ) {
-            $this->di = DI::getDefault();
-        }
-        return $this->di;
-    }
-
-    public function __get($name)
-    {
-        if ( $this->getDI()->has($name) ) {
-            return $this->di->get($name);
-        }
-    }
 }

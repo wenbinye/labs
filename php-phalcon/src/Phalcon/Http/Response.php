@@ -59,6 +59,8 @@ class Response
         505 => 'HTTP Version Not Supported',
         509 => 'Bandwidth Limit Exceeded',
     );
+
+    private $content;
     
     public function redirect($url)
     {
@@ -75,5 +77,15 @@ class Response
             $msg = isset(self::$HTTP_MESSAGES[$code]) ? self::$HTTP_MESSAGES[$code] : '';
         }
         header("HTTP/1.1 {$code} {$msg}");
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 }

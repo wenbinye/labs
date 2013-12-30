@@ -69,7 +69,7 @@ class Loader
                     if ( file_exists($file) ) {
                         return $file;
                     }
-                }
+                } 
             }
         }
         if ( isset($this->dirs) ) {
@@ -85,7 +85,7 @@ class Loader
     public function normalizePath($path, $className)
     {
         $file = $path . \DIRECTORY_SEPARATOR . str_replace(array('\\', '_'), \DIRECTORY_SEPARATOR, ltrim($className, '\\_')). '.php';
-        error_log("autoload $file");
+        // error_log("try load $file");
         return $file;
     }
     

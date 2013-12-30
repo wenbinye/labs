@@ -17,6 +17,9 @@ class FactoryDefault extends DI
         ),
         'dispatcher' => array(
             'className' => 'Phalcon\Mvc\Dispatcher'
+        ),
+        'router' => array(
+            'className' => 'Phalcon\Mvc\Router'
         )
     );
 
@@ -24,7 +27,8 @@ class FactoryDefault extends DI
         'filter' => true,
         'request' => true,
         'response' => true,
-        'dispatcher' => true
+        'dispatcher' => true,
+        'router' => true,
     );
 
     public function __construct()
