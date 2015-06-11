@@ -8,7 +8,9 @@
  * @version $Id$
  */
 
-   // $useNamespace = (bool) ini_get("yaf.use_namespace");
+$outputDir = rtrim($_SERVER['argv'][1], '/'). "/";
+echo "输出到目录：" . $outputDir, "\n";
+
 $useNamespace = true;
 $yafClassPrefix = sprintf("Phalcon%s", $useNamespace ? "\\" : "_");
 $classes = array_merge(get_declared_classes(), get_declared_interfaces());
@@ -17,7 +19,6 @@ foreach ($classes as $key => $value) {
         unset($classes[$key]);
     }
 }
-
 
 foreach ($classes as $class_name) {
     $full_class_name = $class_name;
@@ -116,12 +117,6 @@ echo "<?php\n";
           echo implode(' ', Reflection::getModifierNames($m->getModifiers()));
           echo " function ", $m->getName(), "(";
 
-          if ($m->isAbstract()) {
-              // abstract methods are without a body "{ ... }"
-              echo ");\n";
-              continue;
-          }
-
           $parameters = $m->getParameters();
           $number = count($parameters);
           $index  = 0;
@@ -156,13 +151,18 @@ echo "<?php\n";
               }
           }
 
-          echo ") {}\n";
+          if ($m->isAbstract()) {
+              // abstract methods are without a body "{ ... }"
+              echo ");\n";
+          } else {
+              echo ") {}\n";
+          }
       }
     }
 
     echo "}\n";
     $code = ob_get_clean();
-    $file = '/home/ywb/src/phalcon-php/' . str_replace('\\', '/', $full_class_name) . ".php";
+    $file = $outputDir . str_replace('\\', '/', $full_class_name) . ".php";
     echo "generate $file\n";
     $dir = dirname($file);
     if ( !is_dir($dir) ) {
