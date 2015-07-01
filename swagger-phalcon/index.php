@@ -3,6 +3,8 @@ use Phalcon\DI\FactoryDefault;
 use Phalcon\Loader;
 use Phalcon\Mvc\Router\Annotations as RouterAnnotations;
 use Phalcon\Annotations\Adapter\Apc as Annotations;
+use PhalconX\Mvc\Micro;
+use PhalconX\Mvc\SwaggerApplication;
 
 $loader = new Loader;
 $loader->registerDirs(['.']);
@@ -12,21 +14,16 @@ $di = new FactoryDefault();
 $di['loader'] = $loader;
 
 $di['petService'] = 'PetStore\\V10000\\Services\\PetService';
-$di['validator'] = 'PetStore\\DummyValidator';
+$di['validator'] = 'PhalconX\\Validator';
 $di['annotations'] = Annotations::CLASS;
     
-$router = new RouterAnnotations(false);
-$router->setDI($di);
-$router->addResource('PetStore\\V10000\Controllers\Pet');
+$di['router'] = function() use($di) {
+    $router = new RouterAnnotations(false);
+    $router->setDI($di);
+    $router->addResource('PetStore\\V10000\Controllers\Pet');
+    return $router;
+};
 
-$router->handle();
-if ($router->wasMatched()) {
-    $controller = $router->getNamespaceName() . '\\' . ucfirst($router->getControllerName()) . 'Controller';
-    $action = $router->getActionName();
-    $returnValue = call_user_func_array(array($di->getShared($controller), $action), $router->getParams());
-    echo json_encode($returnValue);
-} else {
-    echo '{"error": "Not Found"}';
-}
-
-
+$app = new Micro($di);
+// $app = new SwaggerApplication($di);
+echo json_encode($app->handle());

@@ -59,7 +59,7 @@ class PetController extends Controller
                 'value' => &$limit,
                 'required' => false,
                 'default' => 10,
-                'validator' => new Between(['minimum' => 1, 'maximum' => 20])
+                'validator' => new Between(['minimum' => 1, 'maximum' => 20]),
                 'type' => 'integer'
             ]
         ]);
