@@ -1,0 +1,60 @@
+{
+  "package" : "Swagger\\V1000\\Models",
+  "artifactId" : "swagger-client",
+  "imports" : [ ],
+  "version" : "1.0.0",
+  "models" : [ {
+    "model" : {
+      "name" : "Tag",
+      "classname" : "Tag",
+      "description" : "The model Tag.",
+      "classVarName" : "tag",
+      "modelJson" : "{\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"name\" : {\n      \"type\" : \"string\"\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Tag\"\n  }\n}",
+      "vars" : [ {
+        "baseName" : "id",
+        "getter" : "getId",
+        "setter" : "setId",
+        "description" : "The id.\n     * \n     * @Valid(type=integer)",
+        "datatype" : "int",
+        "datatypeWithEnum" : "int",
+        "name" : "id",
+        "defaultValue" : "null",
+        "baseType" : "int",
+        "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "hasMore" : true,
+        "isPrimitiveType" : true,
+        "isNotContainer" : true,
+        "isEnum" : false,
+        "allowableValues" : { }
+      }, {
+        "baseName" : "name",
+        "getter" : "getName",
+        "setter" : "setName",
+        "description" : "The name.",
+        "datatype" : "string",
+        "datatypeWithEnum" : "string",
+        "name" : "name",
+        "defaultValue" : "null",
+        "baseType" : "string",
+        "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+        "isPrimitiveType" : true,
+        "isNotContainer" : true,
+        "isEnum" : false
+      } ],
+      "imports" : [ ],
+      "hasVars" : true,
+      "hasEnums" : false
+    },
+    "importPath" : "Swagger\\V1000\\Models.Tag"
+  } ],
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "infoEmail" : "apiteam@swagger.io",
+  "appVersion" : "1.0.0",
+  "artifactVersion" : "1.0.0",
+  "licenseInfo" : "Apache 2.0",
+  "invokerPackage" : "Swagger\\V1000",
+  "infoUrl" : null,
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+}

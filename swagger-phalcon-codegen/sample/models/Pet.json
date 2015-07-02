@@ -1,0 +1,137 @@
+{
+  "package" : "Swagger\\V1000\\Models",
+  "artifactId" : "swagger-client",
+  "imports" : [ {
+    "import" : "Swagger\\V1000\\Models.Category"
+  }, {
+    "import" : "Swagger\\V1000\\Models.Tag"
+  }, {
+    "import" : "array"
+  }, {
+    "import" : "array"
+  } ],
+  "version" : "1.0.0",
+  "models" : [ {
+    "model" : {
+      "name" : "Pet",
+      "classname" : "Pet",
+      "description" : "The model Pet.",
+      "classVarName" : "pet",
+      "modelJson" : "{\n  \"required\" : [ \"name\", \"photoUrls\" ],\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"category\" : {\n      \"$ref\" : \"#/definitions/Category\"\n    },\n    \"name\" : {\n      \"type\" : \"string\",\n      \"example\" : \"doggie\"\n    },\n    \"photoUrls\" : {\n      \"type\" : \"array\",\n      \"items\" : {\n        \"type\" : \"string\"\n      }\n    },\n    \"tags\" : {\n      \"type\" : \"array\",\n      \"items\" : {\n        \"$ref\" : \"#/definitions/Tag\"\n      }\n    },\n    \"status\" : {\n      \"type\" : \"string\",\n      \"description\" : \"pet status in the store\",\n      \"enum\" : [ \"available\", \"pending\", \"sold\" ]\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Pet\"\n  }\n}",
+      "vars" : [ {
+        "baseName" : "id",
+        "getter" : "getId",
+        "setter" : "setId",
+        "description" : "The id.\n     * \n     * @Valid(type=integer)",
+        "datatype" : "int",
+        "datatypeWithEnum" : "int",
+        "name" : "id",
+        "defaultValue" : "null",
+        "baseType" : "int",
+        "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "hasMore" : true,
+        "isPrimitiveType" : true,
+        "isNotContainer" : true,
+        "isEnum" : false,
+        "allowableValues" : { }
+      }, {
+        "baseName" : "category",
+        "complexType" : "Category",
+        "getter" : "getCategory",
+        "setter" : "setCategory",
+        "description" : "The category.",
+        "datatype" : "Category",
+        "datatypeWithEnum" : "Category",
+        "name" : "category",
+        "defaultValue" : "null",
+        "baseType" : "Category",
+        "jsonSchema" : "{\n  \"$ref\" : \"#/definitions/Category\"\n}",
+        "hasMore" : true,
+        "isNotContainer" : true,
+        "isEnum" : false
+      }, {
+        "baseName" : "name",
+        "getter" : "getName",
+        "setter" : "setName",
+        "description" : "The name.\n     * \n     * @Valid(required=true)",
+        "datatype" : "string",
+        "datatypeWithEnum" : "string",
+        "name" : "name",
+        "defaultValue" : "null",
+        "baseType" : "string",
+        "example" : "doggie",
+        "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"example\" : \"doggie\"\n}",
+        "hasMore" : true,
+        "required" : true,
+        "isPrimitiveType" : true,
+        "isNotContainer" : true,
+        "isEnum" : false
+      }, {
+        "baseName" : "photoUrls",
+        "getter" : "getPhotoUrls",
+        "setter" : "setPhotoUrls",
+        "description" : "The photo_urls.\n     * \n     * @Valid(required=true)",
+        "datatype" : "array[string]",
+        "datatypeWithEnum" : "array[string]",
+        "name" : "photo_urls",
+        "defaultValue" : "null",
+        "baseType" : "array",
+        "containerType" : "array",
+        "jsonSchema" : "{\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  }\n}",
+        "hasMore" : true,
+        "required" : true,
+        "isPrimitiveType" : true,
+        "isContainer" : true,
+        "isEnum" : false
+      }, {
+        "baseName" : "tags",
+        "complexType" : "Tag",
+        "getter" : "getTags",
+        "setter" : "setTags",
+        "description" : "The tags.",
+        "datatype" : "array[Tag]",
+        "datatypeWithEnum" : "array[Tag]",
+        "name" : "tags",
+        "defaultValue" : "null",
+        "baseType" : "array",
+        "containerType" : "array",
+        "jsonSchema" : "{\n  \"type\" : \"array\",\n  \"items\" : {\n    \"$ref\" : \"#/definitions/Tag\"\n  }\n}",
+        "hasMore" : true,
+        "isContainer" : true,
+        "isEnum" : false
+      }, {
+        "baseName" : "status",
+        "getter" : "getStatus",
+        "setter" : "setStatus",
+        "description" : "pet status in the store",
+        "datatype" : "string",
+        "datatypeWithEnum" : "StatusEnum",
+        "name" : "status",
+        "defaultValue" : "null",
+        "baseType" : "string",
+        "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"description\" : \"pet status in the store\",\n  \"enum\" : [ \"available\", \"pending\", \"sold\" ]\n}",
+        "isPrimitiveType" : true,
+        "isNotContainer" : true,
+        "isEnum" : true,
+        "_enum" : [ "available", "pending", "sold" ],
+        "allowableValues" : {
+          "values" : [ "available", "pending", "sold" ]
+        }
+      } ],
+      "imports" : [ "Category", "Tag", "array" ],
+      "hasVars" : true,
+      "hasEnums" : true
+    },
+    "importPath" : "Swagger\\V1000\\Models.Pet"
+  } ],
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "infoEmail" : "apiteam@swagger.io",
+  "appVersion" : "1.0.0",
+  "artifactVersion" : "1.0.0",
+  "licenseInfo" : "Apache 2.0",
+  "invokerPackage" : "Swagger\\V1000",
+  "infoUrl" : null,
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+}
