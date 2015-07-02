@@ -1,17 +1,6 @@
 {
-  "package" : "Swagger\\V1000\\Models",
-  "artifactId" : "swagger-client",
-  "imports" : [ {
-    "import" : "Swagger\\V1000\\Models.Category"
-  }, {
-    "import" : "Swagger\\V1000\\Models.Tag"
-  }, {
-    "import" : "array"
-  }, {
-    "import" : "array"
-  } ],
-  "version" : "1.0.0",
   "models" : [ {
+    "importPath" : "PetStore\\V1000\\Models\\Pet",
     "model" : {
       "name" : "Pet",
       "classname" : "Pet",
@@ -70,7 +59,7 @@
         "baseName" : "photoUrls",
         "getter" : "getPhotoUrls",
         "setter" : "setPhotoUrls",
-        "description" : "The photo_urls.\n     * \n     * @Valid(required=true)",
+        "description" : "The photo_urls.\n     * \n     * @Valid(required=true, type=array)",
         "datatype" : "array[string]",
         "datatypeWithEnum" : "array[string]",
         "name" : "photo_urls",
@@ -88,7 +77,7 @@
         "complexType" : "Tag",
         "getter" : "getTags",
         "setter" : "setTags",
-        "description" : "The tags.",
+        "description" : "The tags.\n     * \n     * @Valid(type=array, element=Tag)",
         "datatype" : "array[Tag]",
         "datatypeWithEnum" : "array[Tag]",
         "name" : "tags",
@@ -118,20 +107,32 @@
           "values" : [ "available", "pending", "sold" ]
         }
       } ],
-      "imports" : [ "Category", "Tag", "array" ],
+      "imports" : [ "Category", "array", "Tag" ],
       "hasVars" : true,
       "hasEnums" : true
-    },
-    "importPath" : "Swagger\\V1000\\Models.Pet"
+    }
   } ],
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appVersion" : "1.0.0",
+  "package" : "PetStore\\V1000\\Models",
+  "imports" : [ {
+    "import" : "PetStore\\V1000\\Models\\Category"
+  }, {
+    "import" : "array"
+  }, {
+    "import" : "array"
+  }, {
+    "import" : "PetStore\\V1000\\Models\\Tag"
+  } ],
+  "artifactVersion" : "1.0.0",
   "appName" : "Swagger Petstore",
   "groupId" : "io.swagger",
-  "infoEmail" : "apiteam@swagger.io",
-  "appVersion" : "1.0.0",
-  "artifactVersion" : "1.0.0",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters",
+  "invokerPackage" : "PetStore\\V1000",
   "licenseInfo" : "Apache 2.0",
-  "invokerPackage" : "Swagger\\V1000",
+  "version" : "1.0.0",
   "infoUrl" : null,
-  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
-  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+  "namespace" : "PetStore",
+  "infoEmail" : "apiteam@swagger.io",
+  "artifactId" : "swagger-client"
 }

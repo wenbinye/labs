@@ -3,11 +3,9 @@ package in.wenb.swagger;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import io.swagger.codegen.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +15,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import io.swagger.codegen.CliOption;
-import io.swagger.codegen.CodegenConfig;
-import io.swagger.codegen.CodegenModel;
-import io.swagger.codegen.CodegenProperty;
-import io.swagger.codegen.CodegenType;
-import io.swagger.codegen.SupportingFile;
 import io.swagger.codegen.languages.PhpClientCodegen;
 import io.swagger.util.Json;
 
@@ -35,6 +27,10 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     public static final Set<String> INT_TYPES = Sets.newHashSet("integer", "long", "int");
 
     public static final Set<String> NUM_TYPES = Sets.newHashSet("double", "float", "number");
+
+    private Map<String, Map<String, Object>> modelContext = new HashMap<String, Map<String, Object>>();
+
+    private Map<String, Map<String, Object>> operationContext = new HashMap<String, Map<String, Object>>();
 
     private boolean initAdditionalProperties = false;
     protected String sourceFolder = "src";
@@ -53,6 +49,9 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
          * it will be processed by the template engine.  Otherwise, it will be copied
          */
         supportingFiles = new ArrayList<SupportingFile>();
+
+        apiTemplateFiles.clear();
+        apiTemplateFiles.put("controller.mustache", ".php");
 
         cliOptions.add(new CliOption(NAMESPACE, "Code namespace"));
     }
@@ -90,26 +89,77 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     @Override
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         objs = super.postProcessModels(objs);
-        initAdditionalProperties();
-
         @SuppressWarnings("unchecked")
         Map<String, Object> modelInfo = (Map<String, Object>) ((List<Object>) objs.get("models")).get(0);
         processModel(modelInfo);
+        CodegenModel model = (CodegenModel) modelInfo.get("model");
+        modelContext.put(model.name, objs);
+        return objs;
+    }
 
+    @Override
+    public String toModelFilename(String name) {
         if (System.getProperty("debugData") != null) {
-            objs.putAll(additionalProperties());
             try {
-                File modelDataFile = new File("sample/models/" + ((CodegenModel)modelInfo.get("model")).name + ".json");
-                if (!modelDataFile.getParentFile().exists()) {
-                    modelDataFile.getParentFile().mkdirs();
+                String modelName = camelize(name);
+                if (modelContext.containsKey(modelName)) {
+
+                    File modelDataFile = new File("sample/models/" + modelName + ".json");
+                    if (!modelDataFile.getParentFile().exists()) {
+                        modelDataFile.getParentFile().mkdirs();
+                    }
+                    logger.info("create data file {}", modelDataFile);
+                    IOUtils.write(Json.pretty(modelContext.get(modelName)), new FileOutputStream(modelDataFile));
                 }
-                logger.info("create data file {}", modelDataFile);
-                IOUtils.write(Json.pretty(objs), new FileOutputStream(modelDataFile));
             } catch (IOException e) {
                 logger.error("", e);
             }
         }
+        return super.toModelFilename(name);
+    }
+
+    @Override
+    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+        objs = super.postProcessOperations(objs);
+        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
+        Iterator<Map<String, String>> it = imports.iterator();
+        while (it.hasNext()) {
+            Map<String, String> oneImport = it.next();
+            if (Strings.isNullOrEmpty(oneImport.get("import"))) {
+                it.remove();
+            }
+        }
+        Map<String, Object> operationInfo = ((Map<String, Object>) objs.get("operations"));
+        List<CodegenOperation> operations = (List<CodegenOperation>) operationInfo.get("operation");
+        for (CodegenOperation operation: operations) {
+            processOperation(operation);
+        }
+        operationContext.put((String) operationInfo.get("classname"), objs);
         return objs;
+    }
+
+    @Override
+    public String apiFilename(String templateName, String tag) {
+        if (System.getProperty("debugData") != null) {
+            try {
+                String apiName = toApiName(tag);
+                if (operationContext.containsKey(apiName)) {
+                    File apiDataFile = new File("sample/apis/" + apiName + ".json");
+                    if (!apiDataFile.getParentFile().exists()) {
+                        apiDataFile.getParentFile().mkdirs();
+                    }
+                    logger.info("create data file {}", apiDataFile);
+                    IOUtils.write(Json.pretty(operationContext.get(apiName)), new FileOutputStream(apiDataFile));
+                }
+            } catch (IOException e) {
+                logger.error("", e);
+            }
+        }
+        return super.apiFilename(templateName, tag);
+    }
+
+    private void processOperation(CodegenOperation operation) {
+
     }
 
     private void processModel(Map<String, Object> modelInfo) {
@@ -136,12 +186,16 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             params.add("type=number");
         } else if ("boolean".equals(property.datatype)) {
             params.add("type=boolean");
-        } else if ("array".equals(property.datatype)) {
+        } else if ("array".equals(property.baseType)) {
             params.add("type=array");
+            if (property.complexType != null) {
+                params.add("element=" + property.complexType);
+            }
         }
         if (property.defaultValue != null && !"null".equals(property.defaultValue)) {
             params.add("default=\"" + property.defaultValue+ "\"");
         }
+        Joiner joiner = Joiner.on(", ");
         if (property.minimum != null || property.maximum != null) {
             List<String> validatorParams = new ArrayList<String>();
             if (property.minimum != null) {
@@ -156,10 +210,10 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             if (property.exclusiveMaximum != null) {
                 validatorParams.add("exclusiveMaximum=" + property.exclusiveMaximum);
             }
-            params.add("validator=Range(" + Joiner.on(",").join(validatorParams) + ")");
+            params.add("validator=Range(" + joiner.join(validatorParams) + ")");
         }
         if (!params.isEmpty()) {
-            String validator = "@Valid(" + Joiner.on(",").join(params) + ")";
+            String validator = "@Valid(" + joiner.join(params) + ")";
             property.description = property.description + "\n     * " + "\n     * " + validator;
         }
     }
@@ -179,15 +233,34 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     }
 
     @Override
+    public String modelPackage() {
+        initAdditionalProperties();
+        return super.modelPackage();
+    }
+
+    @Override
     public String modelFileFolder() {
         return outputFolder + File.separatorChar + sourceFolder + File.separatorChar
                 + modelPackage.replace(NAMESPACE_SEPARATOR, File.separatorChar);
     }
 
     @Override
+    public String toApiName(String name) {
+        return camelize(name) + "Controller";
+    }
+
+    @Override
     public String apiFileFolder() {
         return outputFolder + File.separatorChar + sourceFolder + File.separatorChar
                 + apiPackage.replace(NAMESPACE_SEPARATOR, File.separatorChar);
+    }
+
+    @Override
+    public String toModelImport(String name) {
+        if ("array".equals(name)) {
+            return "";
+        }
+        return modelPackage() + NAMESPACE_SEPARATOR + name;
     }
 
     private String getNamespaceVersion() {
