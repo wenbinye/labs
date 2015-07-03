@@ -9,8 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.apache.commons.io.IOUtils;
@@ -18,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 import com.alibaba.fastjson.JSON;
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
-import io.swagger.util.Json;
 
 /**
  *
@@ -28,8 +25,8 @@ import io.swagger.util.Json;
  */
 public class MustacheRender {
     public static void main(String[] args) {
-        String templateFile = args[0];
-        String modelFile = args[1];
+        String modelFile = args[0];
+        String templateFile = args[1];
         new MustacheRender().run(templateFile, modelFile);
     }
 
@@ -41,7 +38,7 @@ public class MustacheRender {
                 .withLoader(new Mustache.TemplateLoader() {
                     public Reader getTemplate(String name) {
                         try {
-                            return new FileReader(new File(dir + name));
+                            return new FileReader(new File(dir, name + ".mustache"));
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                             return null;
@@ -57,7 +54,6 @@ public class MustacheRender {
             e.printStackTrace();
         }
     }
-
 
     public String readTemplate(String name) {
         try {

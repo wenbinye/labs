@@ -3,6 +3,7 @@ package in.wenb.swagger;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import io.swagger.codegen.*;
@@ -144,7 +145,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             try {
                 String apiName = toApiName(tag);
                 if (operationContext.containsKey(apiName)) {
-                    File apiDataFile = new File("sample/apis/" + apiName + ".json");
+                    File apiDataFile = new File("sample/apis/" + camelize(tag) + ".json");
                     if (!apiDataFile.getParentFile().exists()) {
                         apiDataFile.getParentFile().mkdirs();
                     }
@@ -159,7 +160,17 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     }
 
     private void processOperation(CodegenOperation operation) {
-
+        for (CodegenParameter parameter: operation.allParams) {
+            for (Field field: parameter.getClass().getDeclaredFields()) {
+                try {
+                    if (field.getType() == Boolean.class && field.get(parameter) == null) {
+                        field.set(parameter, false);
+                    }
+                } catch (IllegalAccessException e) {
+                    logger.error("", e);
+                }
+            }
+        }
     }
 
     private void processModel(Map<String, Object> modelInfo) {
