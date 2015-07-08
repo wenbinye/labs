@@ -41,8 +41,15 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
 
     private Map<String, Map<String, Object>> operationContext = new HashMap<String, Map<String, Object>>();
 
+    private static final Map<String, String> phpValidators = new HashMap<String, String>();
+
     private boolean initAdditionalProperties = false;
     protected String sourceFolder = "src";
+
+    static {
+        phpValidators.put("IsA", "PhalconX\\Validators\\IsA");
+        phpValidators.put("Range", "PhalconX\\Validators\\Range");
+    }
 
     public PhalconCodegen() {
         super();
@@ -107,7 +114,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         objs = super.postProcessModels(objs);
         @SuppressWarnings("unchecked")
         Map<String, Object> modelInfo = (Map<String, Object>) ((List<Object>) objs.get("models")).get(0);
-        processModel(modelInfo);
+        processModel(modelInfo, objs);
         CodegenModel model = (CodegenModel) modelInfo.get("model");
         modelContext.put(model.name, objs);
         return objs;
@@ -135,6 +142,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     }
 
     private void processOperation(PhpCodegenOperation operation, Map<String, Object> objs) {
+        List<Object> imports = (List<Object>) objs.get("validatorImports");
         List<Map<String, String>> validators = new ArrayList<Map<String, String>>();
         List<String> otherValidators = new ArrayList<String>();
         int baseIndent = 8;
@@ -179,7 +187,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
                     validatorParams.add("'exclusiveMaximum' => " + p.exclusiveMaximum);
                 }
                 params.add("'validator' => new Range([" + joiner.join(validatorParams) + "])");
-                addValidatorImport(objs, "PhalconX\\Validators\\Range");
+                imports.add(createSubElement("import", phpValidators.get("Range")));
             }
             if (params.size() > 2) {
                 otherValidators.add("[\n" + Strings.repeat(" ", baseIndent + 8) + joiner.join(params)
@@ -188,7 +196,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         }
         if (!otherValidators.isEmpty()) {
             String indent = Strings.repeat(" ", baseIndent+4);
-            validators.add(createValidator("[\n" + indent
+            validators.add(createSubElement("validator", "[\n" + indent
                     + Joiner.on(",\n" + indent).join(otherValidators)
                     + "\n"+Strings.repeat(" ", baseIndent)+"]"));
         }
@@ -197,24 +205,17 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
 
     private void createBodyParameterValidator(CodegenParameter parameter) {
         List<String> params = new ArrayList<String>();
-        params.add("'value' => $"+ parameter.paramName);
+        params.add("'value' => $" + parameter.paramName);
         if (parameter.required == Boolean.TRUE) {
             params.add("'required' => true");
         }
         return;
     }
 
-    private void addValidatorImport(Map<String, Object> objs, String importClz) {
-        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("validatorImports");
-        Map<String, String> el = new HashMap<String, String>();
-        el.put("import", importClz);
-        imports.add(el);
-    }
-
-    private Map<String,String> createValidator(String content) {
-        Map<String, String> validator = Maps.newHashMap();
-        validator.put("validator", content);
-        return validator;
+    private Map<String,String> createSubElement(String key, String content) {
+        Map<String, String> elem = Maps.newHashMap();
+        elem.put(key, content);
+        return elem;
     }
 
     @Override
@@ -239,17 +240,18 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         return parameter;
     }
 
-    private void processModel(Map<String, Object> modelInfo) {
+    private void processModel(Map<String, Object> modelInfo, Map<String, Object> objs) {
         CodegenModel model = (CodegenModel) modelInfo.get("model");
         if (Strings.isNullOrEmpty(model.description)) {
             model.description = "The model " + model.name + ".";
         }
+        List<Object> imports = (List<Object>) objs.get("imports");
         for (CodegenProperty property: model.vars) {
-            processProperty((PhpCodegenProperty) property);
+            processProperty((PhpCodegenProperty) property, imports);
         }
     }
 
-    private void processProperty(PhpCodegenProperty property) {
+    private void processProperty(PhpCodegenProperty property, List<Object> imports) {
         if (Strings.isNullOrEmpty(property.description)) {
             property.description = "The " + property.name + ".";
         }
@@ -267,10 +269,12 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         } else if (property.isContainer == Boolean.TRUE) {
             params.add("type=array");
             if (property.complexType != null) {
-                params.add("element=@IsA(" + property.complexType + ")");
+                validators.add(createSubElement("validator", "@IsA(\"" + property.complexType + "[]\")"));
+                imports.add(createSubElement("import", phpValidators.get("IsA")));
             }
         } else if (property.complexType != null) {
-            validators.add(createValidator("@IsA("+property.complexType+")"));
+            validators.add(createSubElement("validator", "@IsA(" + property.complexType + ")"));
+            imports.add(createSubElement("import", phpValidators.get("IsA")));
         }
         if (property.defaultValue != null && !"null".equals(property.defaultValue)) {
             params.add("default=\"" + property.defaultValue+ "\"");
@@ -291,9 +295,10 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
                 validatorParams.add("exclusiveMaximum=" + property.exclusiveMaximum);
             }
             params.add("validator=@Range(" + joiner.join(validatorParams) + ")");
+            imports.add(createSubElement("import", phpValidators.get("Range")));
         }
         if (!params.isEmpty()) {
-            validators.add(createValidator("@Valid(" + joiner.join(params) + ")"));
+            validators.add(createSubElement("validator", "@Valid(" + joiner.join(params) + ")"));
         }
         if (!validators.isEmpty()) {
             property.validators = validators;
