@@ -8,6 +8,9 @@
   } ],
   "modelPackage" : "PetStore\\V1000\\Models",
   "artifactVersion" : "1.0.0",
+  "validatorImports" : [ {
+    "import" : "PhalconX\\Validators\\Range"
+  } ],
   "appName" : "Swagger Petstore",
   "groupId" : "io.swagger",
   "contextPath" : "/v2",
@@ -17,7 +20,7 @@
   "classVarName" : "pet",
   "version" : "1.0.0",
   "operations" : {
-    "classname" : "PetApi",
+    "classname" : "PetController",
     "operation" : [ {
       "responseHeaders" : [ ],
       "hasConsumes" : true,
@@ -50,7 +53,8 @@
         "paramName" : "body",
         "dataType" : "Pet",
         "description" : "Pet object that needs to be added to the store",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isBodyParam" : true,
@@ -58,7 +62,8 @@
         "paramName" : "body",
         "dataType" : "Pet",
         "description" : "Pet object that needs to be added to the store",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -121,7 +126,8 @@
         "wildcard" : false
       } ],
       "imports" : [ "Pet" ],
-      "nickname" : "updatePet"
+      "nickname" : "updatePet",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasConsumes" : true,
@@ -154,7 +160,8 @@
         "paramName" : "body",
         "dataType" : "Pet",
         "description" : "Pet object that needs to be added to the store",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isBodyParam" : true,
@@ -162,7 +169,8 @@
         "paramName" : "body",
         "dataType" : "Pet",
         "description" : "Pet object that needs to be added to the store",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -201,7 +209,8 @@
         "wildcard" : false
       } ],
       "imports" : [ "Pet" ],
-      "nickname" : "addPet"
+      "nickname" : "addPet",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -233,9 +242,10 @@
         "dataType" : "array[string]",
         "collectionFormat" : "multi",
         "description" : "Status values that need to be considered for filter",
-        "baseType" : "string",
+        "baseType" : "array",
         "defaultValue" : "available",
-        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"query\",\n  \"description\" : \"Status values that need to be considered for filter\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\",\n  \"default\" : \"available\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"query\",\n  \"description\" : \"Status values that need to be considered for filter\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\",\n  \"default\" : \"available\"\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ ],
@@ -247,7 +257,7 @@
         "dataType" : "array[string]",
         "collectionFormat" : "multi",
         "description" : "Status values that need to be considered for filter",
-        "baseType" : "string",
+        "baseType" : "array",
         "defaultValue" : "available",
         "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"query\",\n  \"description\" : \"Status values that need to be considered for filter\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\",\n  \"default\" : \"available\"\n}"
       } ],
@@ -306,7 +316,10 @@
         "contentType" : "application/xml",
         "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>"
       } ],
-      "nickname" : "findPetsByStatus"
+      "nickname" : "findPetsByStatus",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'status',\n                'value' => &$status,\n                'default' => 'available',\n                'type' => 'array'\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -338,8 +351,9 @@
         "dataType" : "array[string]",
         "collectionFormat" : "multi",
         "description" : "Tags to filter by",
-        "baseType" : "string",
-        "jsonSchema" : "{\n  \"name\" : \"tags\",\n  \"in\" : \"query\",\n  \"description\" : \"Tags to filter by\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\"\n}"
+        "baseType" : "array",
+        "jsonSchema" : "{\n  \"name\" : \"tags\",\n  \"in\" : \"query\",\n  \"description\" : \"Tags to filter by\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\"\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ ],
@@ -351,7 +365,7 @@
         "dataType" : "array[string]",
         "collectionFormat" : "multi",
         "description" : "Tags to filter by",
-        "baseType" : "string",
+        "baseType" : "array",
         "jsonSchema" : "{\n  \"name\" : \"tags\",\n  \"in\" : \"query\",\n  \"description\" : \"Tags to filter by\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\"\n}"
       } ],
       "headerParams" : [ ],
@@ -409,7 +423,10 @@
         "contentType" : "application/xml",
         "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>"
       } ],
-      "nickname" : "findPetsByTags"
+      "nickname" : "findPetsByTags",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'tags',\n                'value' => $tags,\n                'type' => 'array'\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -438,8 +455,10 @@
         "paramName" : "pet_id",
         "dataType" : "int",
         "description" : "ID of pet that needs to be fetched",
-        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
-        "required" : true
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"minimum\" : 1.0,\n  \"format\" : \"int64\"\n}",
+        "required" : true,
+        "minimum" : 1.0,
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -448,7 +467,7 @@
         "paramName" : "pet_id",
         "dataType" : "int",
         "description" : "ID of pet that needs to be fetched",
-        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"minimum\" : 1.0,\n  \"format\" : \"int64\"\n}",
         "required" : true
       } ],
       "queryParams" : [ ],
@@ -523,7 +542,10 @@
         "contentType" : "application/xml",
         "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>"
       } ],
-      "nickname" : "getPetById"
+      "nickname" : "getPetById",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'pet_id',\n                'value' => $pet_id,\n                'type' => 'integer',\n                'required' => true,\n                'validator' => new Range(['minimum' => 1.0])\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasConsumes" : true,
@@ -555,7 +577,8 @@
         "dataType" : "string",
         "description" : "ID of pet that needs to be updated",
         "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be updated\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       }, {
         "isFormParam" : true,
         "notFile" : true,
@@ -565,7 +588,8 @@
         "paramName" : "name",
         "dataType" : "string",
         "description" : "Updated name of the pet",
-        "jsonSchema" : "{\n  \"name\" : \"name\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated name of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"name\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated name of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       }, {
         "isFormParam" : true,
         "notFile" : true,
@@ -574,7 +598,8 @@
         "paramName" : "status",
         "dataType" : "string",
         "description" : "Updated status of the pet",
-        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated status of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated status of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -632,7 +657,10 @@
         "wildcard" : false
       } ],
       "imports" : [ ],
-      "nickname" : "updatePetWithForm"
+      "nickname" : "updatePetWithForm",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'pet_id',\n                'value' => $pet_id,\n                'required' => true\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -658,7 +686,8 @@
         "paramName" : "api_key",
         "dataType" : "string",
         "description" : "",
-        "jsonSchema" : "{\n  \"name\" : \"api_key\",\n  \"in\" : \"header\",\n  \"description\" : \"\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"api_key\",\n  \"in\" : \"header\",\n  \"description\" : \"\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       }, {
         "isPathParam" : true,
         "secondaryParam" : true,
@@ -667,7 +696,8 @@
         "dataType" : "int",
         "description" : "Pet id to delete",
         "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"Pet id to delete\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -714,7 +744,10 @@
         "wildcard" : false
       } ],
       "imports" : [ ],
-      "nickname" : "deletePet"
+      "nickname" : "deletePet",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'pet_id',\n                'value' => $pet_id,\n                'type' => 'integer',\n                'required' => true\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasConsumes" : true,
@@ -745,7 +778,8 @@
         "dataType" : "int",
         "description" : "ID of pet to update",
         "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet to update\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       }, {
         "isFormParam" : true,
         "notFile" : true,
@@ -755,7 +789,8 @@
         "paramName" : "additional_metadata",
         "dataType" : "string",
         "description" : "Additional data to pass to server",
-        "jsonSchema" : "{\n  \"name\" : \"additionalMetadata\",\n  \"in\" : \"formData\",\n  \"description\" : \"Additional data to pass to server\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"additionalMetadata\",\n  \"in\" : \"formData\",\n  \"description\" : \"Additional data to pass to server\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       }, {
         "isFormParam" : true,
         "isFile" : true,
@@ -764,7 +799,8 @@
         "paramName" : "file",
         "dataType" : "string",
         "description" : "file to upload",
-        "jsonSchema" : "{\n  \"name\" : \"file\",\n  \"in\" : \"formData\",\n  \"description\" : \"file to upload\",\n  \"required\" : false,\n  \"type\" : \"file\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"file\",\n  \"in\" : \"formData\",\n  \"description\" : \"file to upload\",\n  \"required\" : false,\n  \"type\" : \"file\"\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -822,11 +858,14 @@
         "wildcard" : true
       } ],
       "imports" : [ ],
-      "nickname" : "uploadFile"
+      "nickname" : "uploadFile",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'pet_id',\n                'value' => $pet_id,\n                'type' => 'integer',\n                'required' => true\n            ]\n        ]"
+      } ]
     } ]
   },
   "basePath" : "http://petstore.swagger.io/v2",
-  "classname" : "PetApi",
+  "classname" : "PetController",
   "infoUrl" : null,
   "namespace" : "PetStore",
   "infoEmail" : "apiteam@swagger.io",

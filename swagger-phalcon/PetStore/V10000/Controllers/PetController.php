@@ -3,7 +3,7 @@ namespace PetStore\V10000\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Validation\Validator\Between;
-use PetStore\V10000\Requests\NewPetRequest;
+use PetStore\V10000\Models\NewPetRequest;
 
 /**
  * @RoutePrefix("/api/pets")

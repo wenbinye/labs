@@ -1,26 +1,24 @@
 {
-  "classname" : "UserController",
-  "modelPackage" : "PetStore\\V1000\\Models",
+  "importPath" : "PetStore\\V1000\\Controllers.User",
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appVersion" : "1.0.0",
   "package" : "PetStore\\V1000\\Controllers",
-  "artifactId" : "swagger-client",
   "imports" : [ {
     "import" : "PetStore\\V1000\\Models\\User"
   } ],
-  "classVarName" : "user",
-  "namespace" : "PetStore",
-  "version" : "1.0.0",
-  "appName" : "Swagger Petstore",
-  "basePath" : "http://petstore.swagger.io/v2",
-  "groupId" : "io.swagger",
-  "infoEmail" : "apiteam@swagger.io",
-  "importPath" : "PetStore\\V1000\\Controllers.User",
-  "appVersion" : "1.0.0",
+  "modelPackage" : "PetStore\\V1000\\Models",
   "artifactVersion" : "1.0.0",
-  "licenseInfo" : "Apache 2.0",
-  "baseName" : "User",
+  "validatorImports" : [ ],
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
   "contextPath" : "/v2",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters",
   "invokerPackage" : "PetStore\\V1000",
+  "licenseInfo" : "Apache 2.0",
+  "classVarName" : "user",
+  "version" : "1.0.0",
   "operations" : {
+    "classname" : "UserController",
     "operation" : [ {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -45,7 +43,8 @@
         "paramName" : "body",
         "dataType" : "User",
         "description" : "Created user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isBodyParam" : true,
@@ -53,7 +52,8 @@
         "paramName" : "body",
         "dataType" : "User",
         "description" : "Created user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -82,7 +82,8 @@
         "wildcard" : true
       } ],
       "imports" : [ "User" ],
-      "nickname" : "createUser"
+      "nickname" : "createUser",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -108,7 +109,9 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+        "baseType" : "User",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isBodyParam" : true,
@@ -117,7 +120,9 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+        "baseType" : "User",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -126,6 +131,7 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
+        "baseType" : "User",
         "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
       } ],
       "pathParams" : [ ],
@@ -147,7 +153,8 @@
         "wildcard" : true
       } ],
       "imports" : [ "User", "array" ],
-      "nickname" : "createUsersWithArrayInput"
+      "nickname" : "createUsersWithArrayInput",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -173,7 +180,9 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+        "baseType" : "User",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isBodyParam" : true,
@@ -182,7 +191,9 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+        "baseType" : "User",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -191,6 +202,7 @@
         "paramName" : "body",
         "dataType" : "array[User]",
         "description" : "List of user object",
+        "baseType" : "User",
         "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
       } ],
       "pathParams" : [ ],
@@ -212,7 +224,8 @@
         "wildcard" : true
       } ],
       "imports" : [ "User", "array" ],
-      "nickname" : "createUsersWithListInput"
+      "nickname" : "createUsersWithListInput",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -243,7 +256,8 @@
         "paramName" : "username",
         "dataType" : "string",
         "description" : "The user name for login",
-        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"query\",\n  \"description\" : \"The user name for login\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"query\",\n  \"description\" : \"The user name for login\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       }, {
         "isQueryParam" : true,
         "secondaryParam" : true,
@@ -251,7 +265,8 @@
         "paramName" : "password",
         "dataType" : "string",
         "description" : "The password for login in clear text",
-        "jsonSchema" : "{\n  \"name\" : \"password\",\n  \"in\" : \"query\",\n  \"description\" : \"The password for login in clear text\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+        "jsonSchema" : "{\n  \"name\" : \"password\",\n  \"in\" : \"query\",\n  \"description\" : \"The password for login in clear text\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ ],
@@ -305,13 +320,14 @@
       } ],
       "imports" : [ ],
       "examples" : [ {
-        "example" : "\"aeiou\"",
-        "contentType" : "application/json"
+        "contentType" : "application/json",
+        "example" : "\"aeiou\""
       }, {
-        "example" : "string",
-        "contentType" : "application/xml"
+        "contentType" : "application/xml",
+        "example" : "string"
       } ],
-      "nickname" : "loginUser"
+      "nickname" : "loginUser",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -350,7 +366,8 @@
         "wildcard" : true
       } ],
       "imports" : [ ],
-      "nickname" : "logoutUser"
+      "nickname" : "logoutUser",
+      "validators" : [ ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -380,7 +397,8 @@
         "dataType" : "string",
         "description" : "The name that needs to be fetched. Use user1 for testing. ",
         "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be fetched. Use user1 for testing. \",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -414,6 +432,7 @@
         "message" : "successful operation",
         "hasMore" : true,
         "examples" : [ {
+          "contentType" : "application/json",
           "example" : {
             "id" : 1,
             "username" : "johnp",
@@ -423,8 +442,7 @@
             "password" : "-secret-",
             "phone" : "0123456789",
             "userStatus" : 0
-          },
-          "contentType" : "application/json"
+          }
         } ],
         "dataType" : "User",
         "baseType" : "User",
@@ -451,10 +469,13 @@
       } ],
       "imports" : [ "User" ],
       "examples" : [ {
-        "example" : "{\n  \"id\" : 1,\n  \"username\" : \"johnp\",\n  \"firstName\" : \"John\",\n  \"lastName\" : \"Public\",\n  \"email\" : \"johnp@swagger.io\",\n  \"password\" : \"-secret-\",\n  \"phone\" : \"0123456789\",\n  \"userStatus\" : 0\n}",
-        "contentType" : "application/json"
+        "contentType" : "application/json",
+        "example" : "{\n  \"id\" : 1,\n  \"username\" : \"johnp\",\n  \"firstName\" : \"John\",\n  \"lastName\" : \"Public\",\n  \"email\" : \"johnp@swagger.io\",\n  \"password\" : \"-secret-\",\n  \"phone\" : \"0123456789\",\n  \"userStatus\" : 0\n}"
       } ],
-      "nickname" : "getUserByName"
+      "nickname" : "getUserByName",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'username',\n                'value' => $username,\n                'required' => true\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -480,7 +501,8 @@
         "paramName" : "body",
         "dataType" : "User",
         "description" : "Updated user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
       },
       "allParams" : [ {
         "isPathParam" : true,
@@ -490,7 +512,8 @@
         "dataType" : "string",
         "description" : "name that need to be deleted",
         "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"name that need to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       }, {
         "isBodyParam" : true,
         "secondaryParam" : true,
@@ -498,7 +521,8 @@
         "paramName" : "body",
         "dataType" : "User",
         "description" : "Updated user object",
-        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
       } ],
       "bodyParams" : [ {
         "isBodyParam" : true,
@@ -547,7 +571,10 @@
         "wildcard" : false
       } ],
       "imports" : [ "User" ],
-      "nickname" : "updateUser"
+      "nickname" : "updateUser",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'username',\n                'value' => $username,\n                'required' => true\n            ]\n        ]"
+      } ]
     }, {
       "responseHeaders" : [ ],
       "hasProduces" : true,
@@ -572,7 +599,8 @@
         "dataType" : "string",
         "description" : "The name that needs to be deleted",
         "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
-        "required" : true
+        "required" : true,
+        "isEnum" : false
       } ],
       "bodyParams" : [ ],
       "pathParams" : [ {
@@ -614,11 +642,17 @@
         "wildcard" : false
       } ],
       "imports" : [ ],
-      "nickname" : "deleteUser"
-    } ],
-    "classname" : "UserController"
+      "nickname" : "deleteUser",
+      "validators" : [ {
+        "validator" : "[\n            [\n                'name' => 'username',\n                'value' => $username,\n                'required' => true\n            ]\n        ]"
+      } ]
+    } ]
   },
+  "basePath" : "http://petstore.swagger.io/v2",
+  "classname" : "UserController",
   "infoUrl" : null,
-  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
-  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+  "namespace" : "PetStore",
+  "infoEmail" : "apiteam@swagger.io",
+  "artifactId" : "swagger-client",
+  "baseName" : "User"
 }

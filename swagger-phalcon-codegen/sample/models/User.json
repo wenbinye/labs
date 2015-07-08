@@ -1,11 +1,6 @@
 {
-  "package" : "PetStore\\V1000\\Models",
-  "artifactId" : "swagger-client",
-  "imports" : [ ],
-  "namespace" : "PetStore",
-  "version" : "1.0.0",
-  "appName" : "Swagger Petstore",
   "models" : [ {
+    "importPath" : "PetStore\\V1000\\Models\\User",
     "model" : {
       "name" : "User",
       "classname" : "User",
@@ -137,16 +132,21 @@
       "imports" : [ ],
       "hasVars" : true,
       "hasEnums" : false
-    },
-    "importPath" : "PetStore\\V1000\\Models\\User"
+    }
   } ],
-  "groupId" : "io.swagger",
-  "infoEmail" : "apiteam@swagger.io",
-  "appVersion" : "1.0.0",
-  "artifactVersion" : "1.0.0",
-  "licenseInfo" : "Apache 2.0",
-  "invokerPackage" : "PetStore\\V1000",
-  "infoUrl" : null,
   "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
-  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+  "appVersion" : "1.0.0",
+  "package" : "PetStore\\V1000\\Models",
+  "imports" : [ ],
+  "artifactVersion" : "1.0.0",
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters",
+  "invokerPackage" : "PetStore\\V1000",
+  "licenseInfo" : "Apache 2.0",
+  "version" : "1.0.0",
+  "infoUrl" : null,
+  "namespace" : "PetStore",
+  "infoEmail" : "apiteam@swagger.io",
+  "artifactId" : "swagger-client"
 }

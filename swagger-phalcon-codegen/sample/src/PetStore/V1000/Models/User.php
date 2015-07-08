@@ -65,6 +65,7 @@ class User implements \ArrayAccess {
      * @Valid(type=integer)
      */
     public $user_status; /* int */
+
     public function __construct(array $data = null) {
         if ($data === null) {
             return;

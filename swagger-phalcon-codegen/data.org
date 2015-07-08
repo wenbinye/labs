@@ -782,3 +782,3125 @@ writing file /home/dabing/src/wenbinye/swagger-phalcon-codegen/./sample/SwaggerC
 
 ############ Supporting file info ############
 
+2 [main] INFO io.swagger.codegen.cmd.Generate - 
+VERBOSE MODE: ON. Additional debug options are injected
+ - [debugSwagger] prints the swagger specification as interpreted by the codegen
+ - [debugModels] prints models passed to the template engine
+ - [debugOperations] prints operations passed to the template engine
+ - [debugSupportingFiles] prints additional data passed to the template engine
+reading config from config.json
+reading from /Users/ywb/src/others/swagger-codegen/modules/swagger-codegen/src/test/resources/2_0/petstore.json
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\"http://swagger.io\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \"special-key\" to test the authorization filters",
+    "version" : "1.0.0",
+    "title" : "Swagger Petstore",
+    "termsOfService" : "http://swagger.io/terms/",
+    "contact" : {
+      "email" : "apiteam@swagger.io"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "petstore.swagger.io",
+  "basePath" : "/v2",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/pet" : {
+      "post" : {
+        "tags" : [ "pet" ],
+        "summary" : "Add a new pet to the store",
+        "description" : "",
+        "operationId" : "addPet",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Pet object that needs to be added to the store",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Pet"
+          }
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Invalid input"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "pet" ],
+        "summary" : "Update an existing pet",
+        "description" : "",
+        "operationId" : "updatePet",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Pet object that needs to be added to the store",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Pet"
+          }
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Validation exception"
+          },
+          "404" : {
+            "description" : "Pet not found"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
+    },
+    "/pet/findByStatus" : {
+      "get" : {
+        "tags" : [ "pet" ],
+        "summary" : "Finds Pets by status",
+        "description" : "Multiple status values can be provided with comma seperated strings",
+        "operationId" : "findPetsByStatus",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Status values that need to be considered for filter",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "default" : "available"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Pet"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid status value"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
+    },
+    "/pet/findByTags" : {
+      "get" : {
+        "tags" : [ "pet" ],
+        "summary" : "Finds Pets by tags",
+        "description" : "Muliple tags can be provided with comma seperated strings. Use tag1, tag2, tag3 for testing.",
+        "operationId" : "findPetsByTags",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "tags",
+          "in" : "query",
+          "description" : "Tags to filter by",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Pet"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid tag value"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
+    },
+    "/pet/{petId}" : {
+      "get" : {
+        "tags" : [ "pet" ],
+        "summary" : "Find pet by ID",
+        "description" : "Returns a pet when ID < 10.  ID > 10 or nonintegers will simulate API error conditions",
+        "operationId" : "getPetById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "petId",
+          "in" : "path",
+          "description" : "ID of pet that needs to be fetched",
+          "required" : true,
+          "type" : "integer",
+          "minimum" : 1.0,
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "Pet not found"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Pet"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        }, {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "pet" ],
+        "summary" : "Updates a pet in the store with form data",
+        "description" : "",
+        "operationId" : "updatePetWithForm",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "petId",
+          "in" : "path",
+          "description" : "ID of pet that needs to be updated",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "formData",
+          "description" : "Updated name of the pet",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "status",
+          "in" : "formData",
+          "description" : "Updated status of the pet",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Invalid input"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "pet" ],
+        "summary" : "Deletes a pet",
+        "description" : "",
+        "operationId" : "deletePet",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "api_key",
+          "in" : "header",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "petId",
+          "in" : "path",
+          "description" : "Pet id to delete",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid pet value"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
+    },
+    "/pet/{petId}/uploadImage" : {
+      "post" : {
+        "tags" : [ "pet" ],
+        "summary" : "uploads an image",
+        "description" : "",
+        "operationId" : "uploadFile",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "petId",
+          "in" : "path",
+          "description" : "ID of pet to update",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "additionalMetadata",
+          "in" : "formData",
+          "description" : "Additional data to pass to server",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "file",
+          "in" : "formData",
+          "description" : "file to upload",
+          "required" : false,
+          "type" : "file"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ {
+          "petstore_auth" : [ "write:pets", "read:pets" ]
+        } ]
+      }
+    },
+    "/store/inventory" : {
+      "get" : {
+        "tags" : [ "store" ],
+        "summary" : "Returns pet inventories by status",
+        "description" : "Returns a map of status codes to quantities",
+        "operationId" : "getInventory",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "integer",
+                "format" : "int32"
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ]
+      }
+    },
+    "/store/order" : {
+      "post" : {
+        "tags" : [ "store" ],
+        "summary" : "Place an order for a pet",
+        "description" : "",
+        "operationId" : "placeOrder",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "order placed for purchasing the pet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Order"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Order"
+            }
+          },
+          "400" : {
+            "description" : "Invalid Order"
+          }
+        }
+      }
+    },
+    "/store/order/{orderId}" : {
+      "get" : {
+        "tags" : [ "store" ],
+        "summary" : "Find purchase order by ID",
+        "description" : "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
+        "operationId" : "getOrderById",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "orderId",
+          "in" : "path",
+          "description" : "ID of pet that needs to be fetched",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "Order not found"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Order"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "store" ],
+        "summary" : "Delete purchase order by ID",
+        "description" : "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+        "operationId" : "deleteOrder",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "orderId",
+          "in" : "path",
+          "description" : "ID of the order that needs to be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "Order not found"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          }
+        }
+      }
+    },
+    "/user" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "createUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Created user object",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/createWithArray" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Creates list of users with given input array",
+        "description" : "",
+        "operationId" : "createUsersWithArrayInput",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "List of user object",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/createWithList" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Creates list of users with given input array",
+        "description" : "",
+        "operationId" : "createUsersWithListInput",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "List of user object",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/login" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs user into the system",
+        "description" : "",
+        "operationId" : "loginUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "query",
+          "description" : "The user name for login",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The password for login in clear text",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Invalid username/password supplied"
+          }
+        }
+      }
+    },
+    "/user/logout" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Logs out current logged in user session",
+        "description" : "",
+        "operationId" : "logoutUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{username}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Get user by user name",
+        "description" : "",
+        "operationId" : "getUserByName",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "path",
+          "description" : "The name that needs to be fetched. Use user1 for testing. ",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "User not found"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            },
+            "examples" : {
+              "application/json" : {
+                "id" : 1,
+                "username" : "johnp",
+                "firstName" : "John",
+                "lastName" : "Public",
+                "email" : "johnp@swagger.io",
+                "password" : "-secret-",
+                "phone" : "0123456789",
+                "userStatus" : 0
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid username supplied"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "user" ],
+        "summary" : "Updated user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "updateUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "path",
+          "description" : "name that need to be deleted",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Updated user object",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "User not found"
+          },
+          "400" : {
+            "description" : "Invalid user supplied"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "user" ],
+        "summary" : "Delete user",
+        "description" : "This can only be done by the logged in user.",
+        "operationId" : "deleteUser",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "username",
+          "in" : "path",
+          "description" : "The name that needs to be deleted",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "User not found"
+          },
+          "400" : {
+            "description" : "Invalid username supplied"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "api_key",
+      "in" : "header"
+    },
+    "petstore_auth" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "http://petstore.swagger.io/api/oauth/dialog",
+      "flow" : "implicit",
+      "scopes" : {
+        "write:pets" : "modify pets in your account",
+        "read:pets" : "read your pets"
+      }
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "username" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "userStatus" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "User Status"
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    },
+    "Category" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Category"
+      }
+    },
+    "Pet" : {
+      "required" : [ "name", "photoUrls" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "category" : {
+          "$ref" : "#/definitions/Category"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "doggie"
+        },
+        "photoUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "tags" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "pet status in the store",
+          "enum" : [ "available", "pending", "sold" ]
+        }
+      },
+      "xml" : {
+        "name" : "Pet"
+      }
+    },
+    "Tag" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Tag"
+      }
+    },
+    "Order" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "petId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "quantity" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "shipDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Order Status",
+          "enum" : [ "placed", "approved", "delivered" ]
+        },
+        "complete" : {
+          "type" : "boolean"
+        }
+      },
+      "xml" : {
+        "name" : "Order"
+      }
+    }
+  }
+}
+2054 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/models/User.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Models/User.php
+2097 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/models/Category.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Models/Category.php
+2119 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/models/Pet.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Models/Pet.php
+2128 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/models/Tag.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Models/Tag.php
+2137 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/models/Order.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Models/Order.php
+############ Model info ############
+[ {
+  "model" : {
+    "name" : "User",
+    "classname" : "User",
+    "description" : "The model User.",
+    "classVarName" : "user",
+    "modelJson" : "{\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"username\" : {\n      \"type\" : \"string\"\n    },\n    \"firstName\" : {\n      \"type\" : \"string\"\n    },\n    \"lastName\" : {\n      \"type\" : \"string\"\n    },\n    \"email\" : {\n      \"type\" : \"string\"\n    },\n    \"password\" : {\n      \"type\" : \"string\"\n    },\n    \"phone\" : {\n      \"type\" : \"string\"\n    },\n    \"userStatus\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int32\",\n      \"description\" : \"User Status\"\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"User\"\n  }\n}",
+    "vars" : [ {
+      "baseName" : "id",
+      "getter" : "getId",
+      "setter" : "setId",
+      "description" : "The id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "username",
+      "getter" : "getUsername",
+      "setter" : "setUsername",
+      "description" : "The username.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "username",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "firstName",
+      "getter" : "getFirstName",
+      "setter" : "setFirstName",
+      "description" : "The first_name.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "first_name",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "lastName",
+      "getter" : "getLastName",
+      "setter" : "setLastName",
+      "description" : "The last_name.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "last_name",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "email",
+      "getter" : "getEmail",
+      "setter" : "setEmail",
+      "description" : "The email.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "email",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "password",
+      "getter" : "getPassword",
+      "setter" : "setPassword",
+      "description" : "The password.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "password",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "phone",
+      "getter" : "getPhone",
+      "setter" : "setPhone",
+      "description" : "The phone.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "phone",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "userStatus",
+      "getter" : "getUserStatus",
+      "setter" : "setUserStatus",
+      "description" : "User Status\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "user_status",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int32\",\n  \"description\" : \"User Status\"\n}",
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    } ],
+    "imports" : [ ],
+    "hasVars" : true,
+    "hasEnums" : false
+  },
+  "importPath" : "PetStore\\V1000\\Models\\User"
+}, {
+  "model" : {
+    "name" : "Category",
+    "classname" : "Category",
+    "description" : "The model Category.",
+    "classVarName" : "category",
+    "modelJson" : "{\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"name\" : {\n      \"type\" : \"string\"\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Category\"\n  }\n}",
+    "vars" : [ {
+      "baseName" : "id",
+      "getter" : "getId",
+      "setter" : "setId",
+      "description" : "The id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "name",
+      "getter" : "getName",
+      "setter" : "setName",
+      "description" : "The name.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "name",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    } ],
+    "imports" : [ ],
+    "hasVars" : true,
+    "hasEnums" : false
+  },
+  "importPath" : "PetStore\\V1000\\Models\\Category"
+}, {
+  "model" : {
+    "name" : "Pet",
+    "classname" : "Pet",
+    "description" : "The model Pet.",
+    "classVarName" : "pet",
+    "modelJson" : "{\n  \"required\" : [ \"name\", \"photoUrls\" ],\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"category\" : {\n      \"$ref\" : \"#/definitions/Category\"\n    },\n    \"name\" : {\n      \"type\" : \"string\",\n      \"example\" : \"doggie\"\n    },\n    \"photoUrls\" : {\n      \"type\" : \"array\",\n      \"items\" : {\n        \"type\" : \"string\"\n      }\n    },\n    \"tags\" : {\n      \"type\" : \"array\",\n      \"items\" : {\n        \"$ref\" : \"#/definitions/Tag\"\n      }\n    },\n    \"status\" : {\n      \"type\" : \"string\",\n      \"description\" : \"pet status in the store\",\n      \"enum\" : [ \"available\", \"pending\", \"sold\" ]\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Pet\"\n  }\n}",
+    "vars" : [ {
+      "baseName" : "id",
+      "getter" : "getId",
+      "setter" : "setId",
+      "description" : "The id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "category",
+      "complexType" : "Category",
+      "getter" : "getCategory",
+      "setter" : "setCategory",
+      "description" : "The category.",
+      "datatype" : "Category",
+      "datatypeWithEnum" : "Category",
+      "name" : "category",
+      "defaultValue" : "null",
+      "baseType" : "Category",
+      "jsonSchema" : "{\n  \"$ref\" : \"#/definitions/Category\"\n}",
+      "hasMore" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "name",
+      "getter" : "getName",
+      "setter" : "setName",
+      "description" : "The name.\n     * \n     * @Valid(required=true)",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "name",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "example" : "doggie",
+      "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"example\" : \"doggie\"\n}",
+      "hasMore" : true,
+      "required" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "photoUrls",
+      "getter" : "getPhotoUrls",
+      "setter" : "setPhotoUrls",
+      "description" : "The photo_urls.\n     * \n     * @Valid(required=true, type=array)",
+      "datatype" : "array[string]",
+      "datatypeWithEnum" : "array[string]",
+      "name" : "photo_urls",
+      "defaultValue" : "null",
+      "baseType" : "array",
+      "containerType" : "array",
+      "jsonSchema" : "{\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  }\n}",
+      "hasMore" : true,
+      "required" : true,
+      "isPrimitiveType" : true,
+      "isContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "tags",
+      "complexType" : "Tag",
+      "getter" : "getTags",
+      "setter" : "setTags",
+      "description" : "The tags.\n     * \n     * @Valid(type=array, element=Tag)",
+      "datatype" : "array[Tag]",
+      "datatypeWithEnum" : "array[Tag]",
+      "name" : "tags",
+      "defaultValue" : "null",
+      "baseType" : "array",
+      "containerType" : "array",
+      "jsonSchema" : "{\n  \"type\" : \"array\",\n  \"items\" : {\n    \"$ref\" : \"#/definitions/Tag\"\n  }\n}",
+      "hasMore" : true,
+      "isContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "status",
+      "getter" : "getStatus",
+      "setter" : "setStatus",
+      "description" : "pet status in the store",
+      "datatype" : "string",
+      "datatypeWithEnum" : "StatusEnum",
+      "name" : "status",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"description\" : \"pet status in the store\",\n  \"enum\" : [ \"available\", \"pending\", \"sold\" ]\n}",
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : true,
+      "_enum" : [ "available", "pending", "sold" ],
+      "allowableValues" : {
+        "values" : [ "available", "pending", "sold" ]
+      }
+    } ],
+    "imports" : [ "Category", "Tag", "array" ],
+    "hasVars" : true,
+    "hasEnums" : true
+  },
+  "importPath" : "PetStore\\V1000\\Models\\Pet"
+}, {
+  "model" : {
+    "name" : "Tag",
+    "classname" : "Tag",
+    "description" : "The model Tag.",
+    "classVarName" : "tag",
+    "modelJson" : "{\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"name\" : {\n      \"type\" : \"string\"\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Tag\"\n  }\n}",
+    "vars" : [ {
+      "baseName" : "id",
+      "getter" : "getId",
+      "setter" : "setId",
+      "description" : "The id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "name",
+      "getter" : "getName",
+      "setter" : "setName",
+      "description" : "The name.",
+      "datatype" : "string",
+      "datatypeWithEnum" : "string",
+      "name" : "name",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\"\n}",
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    } ],
+    "imports" : [ ],
+    "hasVars" : true,
+    "hasEnums" : false
+  },
+  "importPath" : "PetStore\\V1000\\Models\\Tag"
+}, {
+  "model" : {
+    "name" : "Order",
+    "classname" : "Order",
+    "description" : "The model Order.",
+    "classVarName" : "order",
+    "modelJson" : "{\n  \"properties\" : {\n    \"id\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"petId\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int64\"\n    },\n    \"quantity\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int32\"\n    },\n    \"shipDate\" : {\n      \"type\" : \"string\",\n      \"format\" : \"date-time\"\n    },\n    \"status\" : {\n      \"type\" : \"string\",\n      \"description\" : \"Order Status\",\n      \"enum\" : [ \"placed\", \"approved\", \"delivered\" ]\n    },\n    \"complete\" : {\n      \"type\" : \"boolean\"\n    }\n  },\n  \"xml\" : {\n    \"name\" : \"Order\"\n  }\n}",
+    "vars" : [ {
+      "baseName" : "id",
+      "getter" : "getId",
+      "setter" : "setId",
+      "description" : "The id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "petId",
+      "getter" : "getPetId",
+      "setter" : "setPetId",
+      "description" : "The pet_id.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "pet_id",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "quantity",
+      "getter" : "getQuantity",
+      "setter" : "setQuantity",
+      "description" : "The quantity.\n     * \n     * @Valid(type=integer)",
+      "datatype" : "int",
+      "datatypeWithEnum" : "int",
+      "name" : "quantity",
+      "defaultValue" : "null",
+      "baseType" : "int",
+      "jsonSchema" : "{\n  \"type\" : \"integer\",\n  \"format\" : \"int32\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false,
+      "allowableValues" : { }
+    }, {
+      "baseName" : "shipDate",
+      "getter" : "getShipDate",
+      "setter" : "setShipDate",
+      "description" : "The ship_date.",
+      "datatype" : "DateTime",
+      "datatypeWithEnum" : "DateTime",
+      "name" : "ship_date",
+      "defaultValue" : "null",
+      "baseType" : "DateTime",
+      "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"format\" : \"date-time\"\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    }, {
+      "baseName" : "status",
+      "getter" : "getStatus",
+      "setter" : "setStatus",
+      "description" : "Order Status",
+      "datatype" : "string",
+      "datatypeWithEnum" : "StatusEnum",
+      "name" : "status",
+      "defaultValue" : "null",
+      "baseType" : "string",
+      "jsonSchema" : "{\n  \"type\" : \"string\",\n  \"description\" : \"Order Status\",\n  \"enum\" : [ \"placed\", \"approved\", \"delivered\" ]\n}",
+      "hasMore" : true,
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : true,
+      "_enum" : [ "placed", "approved", "delivered" ],
+      "allowableValues" : {
+        "values" : [ "placed", "approved", "delivered" ]
+      }
+    }, {
+      "baseName" : "complete",
+      "getter" : "getComplete",
+      "setter" : "setComplete",
+      "description" : "The complete.\n     * \n     * @Valid(type=boolean)",
+      "datatype" : "boolean",
+      "datatypeWithEnum" : "boolean",
+      "name" : "complete",
+      "defaultValue" : "null",
+      "baseType" : "boolean",
+      "jsonSchema" : "{\n  \"type\" : \"boolean\"\n}",
+      "isPrimitiveType" : true,
+      "isNotContainer" : true,
+      "isEnum" : false
+    } ],
+    "imports" : [ ],
+    "hasVars" : true,
+    "hasEnums" : true
+  },
+  "importPath" : "PetStore\\V1000\\Models\\Order"
+} ]
+3321 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/apis/User.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Controllers/UserController.php
+3348 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/apis/Pet.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Controllers/PetController.php
+3365 [main] INFO in.wenb.swagger.PhalconCodegen - create data file sample/apis/Store.json
+writing file /Users/ywb/src/wenbinye/labs/swagger-phalcon-codegen/sample/src/PetStore/V1000/Controllers/StoreController.php
+############ Operation info ############
+[ {
+  "hasMore" : "true",
+  "modelPackage" : "PetStore\\V1000\\Models",
+  "classname" : "UserController",
+  "package" : "PetStore\\V1000\\Controllers",
+  "artifactId" : "swagger-client",
+  "imports" : [ {
+    "import" : "PetStore\\V1000\\Models\\User"
+  } ],
+  "version" : "1.0.0",
+  "namespace" : "PetStore",
+  "classVarName" : "user",
+  "basePath" : "http://petstore.swagger.io/v2",
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "infoEmail" : "apiteam@swagger.io",
+  "appVersion" : "1.0.0",
+  "importPath" : "PetStore\\V1000\\Controllers.User",
+  "artifactVersion" : "1.0.0",
+  "licenseInfo" : "Apache 2.0",
+  "baseName" : "User",
+  "contextPath" : "/v2",
+  "operations" : {
+    "operation" : [ {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/user",
+      "operationId" : "createUser",
+      "httpMethod" : "POST",
+      "summary" : "Create user",
+      "notes" : "This can only be done by the logged in user.",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Created user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Created user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Created user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Created user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "0",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\"\n}",
+        "wildcard" : true
+      } ],
+      "imports" : [ "User" ],
+      "nickname" : "createUser",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/user/createWithArray",
+      "operationId" : "createUsersWithArrayInput",
+      "httpMethod" : "POST",
+      "summary" : "Creates list of users with given input array",
+      "notes" : "",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "0",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\"\n}",
+        "wildcard" : true
+      } ],
+      "imports" : [ "User", "array" ],
+      "nickname" : "createUsersWithArrayInput",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/user/createWithList",
+      "operationId" : "createUsersWithListInput",
+      "httpMethod" : "POST",
+      "summary" : "Creates list of users with given input array",
+      "notes" : "",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "isContainer" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "array[User]",
+        "description" : "List of user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"List of user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/User\"\n    }\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "0",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\"\n}",
+        "wildcard" : true
+      } ],
+      "imports" : [ "User", "array" ],
+      "nickname" : "createUsersWithListInput",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "returnTypeIsPrimitive" : true,
+      "returnSimpleType" : true,
+      "hasMore" : true,
+      "path" : "/user/login",
+      "operationId" : "loginUser",
+      "returnType" : "string",
+      "httpMethod" : "GET",
+      "returnBaseType" : "string",
+      "summary" : "Logs user into the system",
+      "notes" : "",
+      "baseName" : "User",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isQueryParam" : true,
+        "hasMore" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The user name for login",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"query\",\n  \"description\" : \"The user name for login\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      }, {
+        "isQueryParam" : true,
+        "secondaryParam" : true,
+        "baseName" : "password",
+        "paramName" : "password",
+        "dataType" : "string",
+        "description" : "The password for login in clear text",
+        "jsonSchema" : "{\n  \"name\" : \"password\",\n  \"in\" : \"query\",\n  \"description\" : \"The password for login in clear text\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ ],
+      "queryParams" : [ {
+        "isQueryParam" : true,
+        "hasMore" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The user name for login",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"query\",\n  \"description\" : \"The user name for login\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      }, {
+        "isQueryParam" : true,
+        "secondaryParam" : true,
+        "baseName" : "password",
+        "paramName" : "password",
+        "dataType" : "string",
+        "description" : "The password for login in clear text",
+        "jsonSchema" : "{\n  \"name\" : \"password\",\n  \"in\" : \"query\",\n  \"description\" : \"The password for login in clear text\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      } ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "string",
+        "baseType" : "string",
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"type\" : \"string\"\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid username/password supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid username/password supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ ],
+      "examples" : [ {
+        "example" : "\"aeiou\"",
+        "contentType" : "application/json"
+      }, {
+        "example" : "string",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "loginUser",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasMore" : true,
+      "path" : "/user/logout",
+      "operationId" : "logoutUser",
+      "httpMethod" : "GET",
+      "summary" : "Logs out current logged in user session",
+      "notes" : "",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ ],
+      "bodyParams" : [ ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "0",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\"\n}",
+        "wildcard" : true
+      } ],
+      "imports" : [ ],
+      "nickname" : "logoutUser",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "returnSimpleType" : true,
+      "hasMore" : true,
+      "path" : "/user/{username}",
+      "operationId" : "getUserByName",
+      "returnType" : "User",
+      "httpMethod" : "GET",
+      "returnBaseType" : "User",
+      "summary" : "Get user by user name",
+      "notes" : "",
+      "baseName" : "User",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The name that needs to be fetched. Use user1 for testing. ",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be fetched. Use user1 for testing. \",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The name that needs to be fetched. Use user1 for testing. ",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be fetched. Use user1 for testing. \",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "User not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"User not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "examples" : [ {
+          "example" : {
+            "id" : 1,
+            "username" : "johnp",
+            "firstName" : "John",
+            "lastName" : "Public",
+            "email" : "johnp@swagger.io",
+            "password" : "-secret-",
+            "phone" : "0123456789",
+            "userStatus" : 0
+          },
+          "contentType" : "application/json"
+        } ],
+        "dataType" : "User",
+        "baseType" : "User",
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : false,
+        "schema" : {
+          "$ref" : "#/definitions/User"
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  },\n  \"examples\" : {\n    \"application/json\" : {\n      \"id\" : 1,\n      \"username\" : \"johnp\",\n      \"firstName\" : \"John\",\n      \"lastName\" : \"Public\",\n      \"email\" : \"johnp@swagger.io\",\n      \"password\" : \"-secret-\",\n      \"phone\" : \"0123456789\",\n      \"userStatus\" : 0\n    }\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid username supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid username supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "User" ],
+      "examples" : [ {
+        "example" : "{\n  \"id\" : 1,\n  \"username\" : \"johnp\",\n  \"firstName\" : \"John\",\n  \"lastName\" : \"Public\",\n  \"email\" : \"johnp@swagger.io\",\n  \"password\" : \"-secret-\",\n  \"phone\" : \"0123456789\",\n  \"userStatus\" : 0\n}",
+        "contentType" : "application/json"
+      } ],
+      "nickname" : "getUserByName",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $username]\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/user/{username}",
+      "operationId" : "updateUser",
+      "httpMethod" : "PUT",
+      "summary" : "Updated user",
+      "notes" : "This can only be done by the logged in user.",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "secondaryParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Updated user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isPathParam" : true,
+        "hasMore" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "name that need to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"name that need to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      }, {
+        "isBodyParam" : true,
+        "secondaryParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Updated user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "User",
+        "description" : "Updated user object",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Updated user object\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/User\"\n  }\n}"
+      } ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "name that need to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"name that need to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "User not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"User not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid user supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid user supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "User" ],
+      "nickname" : "updateUser",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $username]\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "path" : "/user/{username}",
+      "operationId" : "deleteUser",
+      "httpMethod" : "DELETE",
+      "summary" : "Delete user",
+      "notes" : "This can only be done by the logged in user.",
+      "baseName" : "User",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The name that needs to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "username",
+        "paramName" : "username",
+        "dataType" : "string",
+        "description" : "The name that needs to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"username\",\n  \"in\" : \"path\",\n  \"description\" : \"The name that needs to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "User" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "User not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"User not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid username supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid username supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ ],
+      "nickname" : "deleteUser",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $username]\n        ]"
+      } ]
+    } ],
+    "classname" : "UserController"
+  },
+  "invokerPackage" : "PetStore\\V1000",
+  "infoUrl" : null,
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+}, {
+  "hasMore" : "true",
+  "modelPackage" : "PetStore\\V1000\\Models",
+  "classname" : "PetController",
+  "package" : "PetStore\\V1000\\Controllers",
+  "artifactId" : "swagger-client",
+  "imports" : [ {
+    "import" : "PetStore\\V1000\\Models\\Pet"
+  }, {
+    "import" : "PhalconX\\Validators\\Range"
+  } ],
+  "version" : "1.0.0",
+  "namespace" : "PetStore",
+  "classVarName" : "pet",
+  "basePath" : "http://petstore.swagger.io/v2",
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "infoEmail" : "apiteam@swagger.io",
+  "appVersion" : "1.0.0",
+  "importPath" : "PetStore\\V1000\\Controllers.Pet",
+  "artifactVersion" : "1.0.0",
+  "licenseInfo" : "Apache 2.0",
+  "baseName" : "Pet",
+  "contextPath" : "/v2",
+  "operations" : {
+    "operation" : [ {
+      "responseHeaders" : [ ],
+      "hasConsumes" : true,
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/pet",
+      "operationId" : "updatePet",
+      "httpMethod" : "PUT",
+      "summary" : "Update an existing pet",
+      "notes" : "",
+      "baseName" : "Pet",
+      "consumes" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "405",
+        "message" : "Validation exception",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Validation exception\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "Pet not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Pet not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid ID supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid ID supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Pet" ],
+      "nickname" : "updatePet",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasConsumes" : true,
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/pet",
+      "operationId" : "addPet",
+      "httpMethod" : "POST",
+      "summary" : "Add a new pet to the store",
+      "notes" : "",
+      "baseName" : "Pet",
+      "consumes" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Pet",
+        "description" : "Pet object that needs to be added to the store",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"Pet object that needs to be added to the store\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "405",
+        "message" : "Invalid input",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid input\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Pet" ],
+      "nickname" : "addPet",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "isListContainer" : true,
+      "hasMore" : true,
+      "path" : "/pet/findByStatus",
+      "operationId" : "findPetsByStatus",
+      "returnType" : "array[Pet]",
+      "httpMethod" : "GET",
+      "returnBaseType" : "Pet",
+      "returnContainer" : "array",
+      "summary" : "Finds Pets by status",
+      "notes" : "Multiple status values can be provided with comma seperated strings",
+      "baseName" : "Pet",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isQueryParam" : true,
+        "isContainer" : true,
+        "baseName" : "status",
+        "paramName" : "status",
+        "dataType" : "array[string]",
+        "collectionFormat" : "multi",
+        "description" : "Status values that need to be considered for filter",
+        "baseType" : "array",
+        "defaultValue" : "available",
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"query\",\n  \"description\" : \"Status values that need to be considered for filter\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\",\n  \"default\" : \"available\"\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ ],
+      "queryParams" : [ {
+        "isQueryParam" : true,
+        "isContainer" : true,
+        "baseName" : "status",
+        "paramName" : "status",
+        "dataType" : "array[string]",
+        "collectionFormat" : "multi",
+        "description" : "Status values that need to be considered for filter",
+        "baseType" : "array",
+        "defaultValue" : "available",
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"query\",\n  \"description\" : \"Status values that need to be considered for filter\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\",\n  \"default\" : \"available\"\n}"
+      } ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "array[Pet]",
+        "baseType" : "Pet",
+        "containerType" : "array",
+        "isDefault" : true,
+        "simpleType" : false,
+        "primitiveType" : false,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "schema" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Pet"
+          }
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/Pet\"\n    }\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid status value",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid status value\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Pet" ],
+      "examples" : [ {
+        "example" : "[ {\n  \"tags\" : [ {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  } ],\n  \"id\" : 123456789,\n  \"category\" : {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  },\n  \"status\" : \"aeiou\",\n  \"name\" : \"doggie\",\n  \"photoUrls\" : [ \"aeiou\" ]\n} ]",
+        "contentType" : "application/json"
+      }, {
+        "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "findPetsByStatus",
+      "validators" : [ {
+        "validator" : "[\n            ['default' => 'available', 'value' => &$status, 'type' => 'array']\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "isListContainer" : true,
+      "hasMore" : true,
+      "path" : "/pet/findByTags",
+      "operationId" : "findPetsByTags",
+      "returnType" : "array[Pet]",
+      "httpMethod" : "GET",
+      "returnBaseType" : "Pet",
+      "returnContainer" : "array",
+      "summary" : "Finds Pets by tags",
+      "notes" : "Muliple tags can be provided with comma seperated strings. Use tag1, tag2, tag3 for testing.",
+      "baseName" : "Pet",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isQueryParam" : true,
+        "isContainer" : true,
+        "baseName" : "tags",
+        "paramName" : "tags",
+        "dataType" : "array[string]",
+        "collectionFormat" : "multi",
+        "description" : "Tags to filter by",
+        "baseType" : "array",
+        "jsonSchema" : "{\n  \"name\" : \"tags\",\n  \"in\" : \"query\",\n  \"description\" : \"Tags to filter by\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\"\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ ],
+      "queryParams" : [ {
+        "isQueryParam" : true,
+        "isContainer" : true,
+        "baseName" : "tags",
+        "paramName" : "tags",
+        "dataType" : "array[string]",
+        "collectionFormat" : "multi",
+        "description" : "Tags to filter by",
+        "baseType" : "array",
+        "jsonSchema" : "{\n  \"name\" : \"tags\",\n  \"in\" : \"query\",\n  \"description\" : \"Tags to filter by\",\n  \"required\" : false,\n  \"type\" : \"array\",\n  \"items\" : {\n    \"type\" : \"string\"\n  },\n  \"collectionFormat\" : \"multi\"\n}"
+      } ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "array[Pet]",
+        "baseType" : "Pet",
+        "containerType" : "array",
+        "isDefault" : true,
+        "simpleType" : false,
+        "primitiveType" : false,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "schema" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Pet"
+          }
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"type\" : \"array\",\n    \"items\" : {\n      \"$ref\" : \"#/definitions/Pet\"\n    }\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid tag value",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid tag value\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Pet" ],
+      "examples" : [ {
+        "example" : "[ {\n  \"tags\" : [ {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  } ],\n  \"id\" : 123456789,\n  \"category\" : {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  },\n  \"status\" : \"aeiou\",\n  \"name\" : \"doggie\",\n  \"photoUrls\" : [ \"aeiou\" ]\n} ]",
+        "contentType" : "application/json"
+      }, {
+        "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "findPetsByTags",
+      "validators" : [ {
+        "validator" : "[\n            ['value' => $tags, 'type' => 'array']\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "returnSimpleType" : true,
+      "hasMore" : true,
+      "path" : "/pet/{petId}",
+      "operationId" : "getPetById",
+      "returnType" : "Pet",
+      "httpMethod" : "GET",
+      "returnBaseType" : "Pet",
+      "summary" : "Find pet by ID",
+      "notes" : "Returns a pet when ID < 10.  ID > 10 or nonintegers will simulate API error conditions",
+      "baseName" : "Pet",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "ID of pet that needs to be fetched",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"minimum\" : 1.0,\n  \"format\" : \"int64\"\n}",
+        "required" : true,
+        "minimum" : 1.0,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "ID of pet that needs to be fetched",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"minimum\" : 1.0,\n  \"format\" : \"int64\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "api_key",
+        "type" : "apiKey",
+        "hasMore" : true,
+        "isBasic" : false,
+        "isOAuth" : false,
+        "isApiKey" : true,
+        "keyParamName" : "api_key",
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : true
+      }, {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "Pet not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Pet not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "Pet",
+        "baseType" : "Pet",
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : false,
+        "schema" : {
+          "$ref" : "#/definitions/Pet"
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Pet\"\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid ID supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid ID supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Pet" ],
+      "examples" : [ {
+        "example" : "{\n  \"tags\" : [ {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  } ],\n  \"id\" : 123456789,\n  \"category\" : {\n    \"id\" : 123456789,\n    \"name\" : \"aeiou\"\n  },\n  \"status\" : \"aeiou\",\n  \"name\" : \"doggie\",\n  \"photoUrls\" : [ \"aeiou\" ]\n}",
+        "contentType" : "application/json"
+      }, {
+        "example" : "<Pet>\n  <id>123456</id>\n  <name>doggie</name>\n  <photoUrls>string</photoUrls>\n  <status>string</status>\n</Pet>",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "getPetById",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $pet_id, 'type' => 'integer', 'validator' => new Range(['minimum' => 1.0])]\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasConsumes" : true,
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/pet/{petId}",
+      "operationId" : "updatePetWithForm",
+      "httpMethod" : "POST",
+      "summary" : "Updates a pet in the store with form data",
+      "notes" : "",
+      "baseName" : "Pet",
+      "consumes" : [ {
+        "hasMore" : null,
+        "mediaType" : "application/x-www-form-urlencoded"
+      } ],
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "hasMore" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "string",
+        "description" : "ID of pet that needs to be updated",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be updated\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      }, {
+        "isFormParam" : true,
+        "notFile" : true,
+        "hasMore" : true,
+        "secondaryParam" : true,
+        "baseName" : "name",
+        "paramName" : "name",
+        "dataType" : "string",
+        "description" : "Updated name of the pet",
+        "jsonSchema" : "{\n  \"name\" : \"name\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated name of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      }, {
+        "isFormParam" : true,
+        "notFile" : true,
+        "secondaryParam" : true,
+        "baseName" : "status",
+        "paramName" : "status",
+        "dataType" : "string",
+        "description" : "Updated status of the pet",
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated status of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "string",
+        "description" : "ID of pet that needs to be updated",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be updated\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ {
+        "isFormParam" : true,
+        "notFile" : true,
+        "hasMore" : true,
+        "baseName" : "name",
+        "paramName" : "name",
+        "dataType" : "string",
+        "description" : "Updated name of the pet",
+        "jsonSchema" : "{\n  \"name\" : \"name\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated name of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      }, {
+        "isFormParam" : true,
+        "notFile" : true,
+        "secondaryParam" : true,
+        "baseName" : "status",
+        "paramName" : "status",
+        "dataType" : "string",
+        "description" : "Updated status of the pet",
+        "jsonSchema" : "{\n  \"name\" : \"status\",\n  \"in\" : \"formData\",\n  \"description\" : \"Updated status of the pet\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      } ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "405",
+        "message" : "Invalid input",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid input\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ ],
+      "nickname" : "updatePetWithForm",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $pet_id]\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "hasMore" : true,
+      "path" : "/pet/{petId}",
+      "operationId" : "deletePet",
+      "httpMethod" : "DELETE",
+      "summary" : "Deletes a pet",
+      "notes" : "",
+      "baseName" : "Pet",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isHeaderParam" : true,
+        "hasMore" : true,
+        "baseName" : "api_key",
+        "paramName" : "api_key",
+        "dataType" : "string",
+        "description" : "",
+        "jsonSchema" : "{\n  \"name\" : \"api_key\",\n  \"in\" : \"header\",\n  \"description\" : \"\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      }, {
+        "isPathParam" : true,
+        "secondaryParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "Pet id to delete",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"Pet id to delete\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "required" : true,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "Pet id to delete",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"Pet id to delete\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ {
+        "isHeaderParam" : true,
+        "baseName" : "api_key",
+        "paramName" : "api_key",
+        "dataType" : "string",
+        "description" : "",
+        "jsonSchema" : "{\n  \"name\" : \"api_key\",\n  \"in\" : \"header\",\n  \"description\" : \"\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      } ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid pet value",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid pet value\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ ],
+      "nickname" : "deletePet",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $pet_id, 'type' => 'integer']\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasConsumes" : true,
+      "hasProduces" : true,
+      "hasParams" : true,
+      "path" : "/pet/{petId}/uploadImage",
+      "operationId" : "uploadFile",
+      "httpMethod" : "POST",
+      "summary" : "uploads an image",
+      "notes" : "",
+      "baseName" : "Pet",
+      "consumes" : [ {
+        "hasMore" : null,
+        "mediaType" : "multipart/form-data"
+      } ],
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "hasMore" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "ID of pet to update",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet to update\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "required" : true,
+        "isEnum" : false
+      }, {
+        "isFormParam" : true,
+        "notFile" : true,
+        "hasMore" : true,
+        "secondaryParam" : true,
+        "baseName" : "additionalMetadata",
+        "paramName" : "additional_metadata",
+        "dataType" : "string",
+        "description" : "Additional data to pass to server",
+        "jsonSchema" : "{\n  \"name\" : \"additionalMetadata\",\n  \"in\" : \"formData\",\n  \"description\" : \"Additional data to pass to server\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}",
+        "isEnum" : false
+      }, {
+        "isFormParam" : true,
+        "isFile" : true,
+        "secondaryParam" : true,
+        "baseName" : "file",
+        "paramName" : "file",
+        "dataType" : "string",
+        "description" : "file to upload",
+        "jsonSchema" : "{\n  \"name\" : \"file\",\n  \"in\" : \"formData\",\n  \"description\" : \"file to upload\",\n  \"required\" : false,\n  \"type\" : \"file\"\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "petId",
+        "paramName" : "pet_id",
+        "dataType" : "int",
+        "description" : "ID of pet to update",
+        "jsonSchema" : "{\n  \"name\" : \"petId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet to update\",\n  \"required\" : true,\n  \"type\" : \"integer\",\n  \"format\" : \"int64\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ {
+        "isFormParam" : true,
+        "notFile" : true,
+        "hasMore" : true,
+        "baseName" : "additionalMetadata",
+        "paramName" : "additional_metadata",
+        "dataType" : "string",
+        "description" : "Additional data to pass to server",
+        "jsonSchema" : "{\n  \"name\" : \"additionalMetadata\",\n  \"in\" : \"formData\",\n  \"description\" : \"Additional data to pass to server\",\n  \"required\" : false,\n  \"type\" : \"string\"\n}"
+      }, {
+        "isFormParam" : true,
+        "isFile" : true,
+        "secondaryParam" : true,
+        "baseName" : "file",
+        "paramName" : "file",
+        "dataType" : "string",
+        "description" : "file to upload",
+        "jsonSchema" : "{\n  \"name\" : \"file\",\n  \"in\" : \"formData\",\n  \"description\" : \"file to upload\",\n  \"required\" : false,\n  \"type\" : \"file\"\n}"
+      } ],
+      "authMethods" : [ {
+        "name" : "petstore_auth",
+        "type" : "oauth2",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : true,
+        "isApiKey" : false,
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : false
+      } ],
+      "tags" : [ "Pet" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "0",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\"\n}",
+        "wildcard" : true
+      } ],
+      "imports" : [ ],
+      "nickname" : "uploadFile",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $pet_id, 'type' => 'integer']\n        ]"
+      } ]
+    } ],
+    "classname" : "PetController"
+  },
+  "invokerPackage" : "PetStore\\V1000",
+  "infoUrl" : null,
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+}, {
+  "modelPackage" : "PetStore\\V1000\\Models",
+  "classname" : "StoreController",
+  "package" : "PetStore\\V1000\\Controllers",
+  "artifactId" : "swagger-client",
+  "imports" : [ {
+    "import" : "PetStore\\V1000\\Models\\map"
+  }, {
+    "import" : "PetStore\\V1000\\Models\\Order"
+  } ],
+  "version" : "1.0.0",
+  "namespace" : "PetStore",
+  "classVarName" : "store",
+  "basePath" : "http://petstore.swagger.io/v2",
+  "appName" : "Swagger Petstore",
+  "groupId" : "io.swagger",
+  "infoEmail" : "apiteam@swagger.io",
+  "appVersion" : "1.0.0",
+  "importPath" : "PetStore\\V1000\\Controllers.Store",
+  "artifactVersion" : "1.0.0",
+  "licenseInfo" : "Apache 2.0",
+  "baseName" : "Store",
+  "contextPath" : "/v2",
+  "operations" : {
+    "operation" : [ {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "isMapContainer" : true,
+      "hasMore" : true,
+      "path" : "/store/inventory",
+      "operationId" : "getInventory",
+      "returnType" : "map[string,int]",
+      "httpMethod" : "GET",
+      "returnBaseType" : "map",
+      "returnContainer" : "map",
+      "summary" : "Returns pet inventories by status",
+      "notes" : "Returns a map of status codes to quantities",
+      "baseName" : "Store",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ ],
+      "bodyParams" : [ ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "authMethods" : [ {
+        "name" : "api_key",
+        "type" : "apiKey",
+        "hasMore" : false,
+        "isBasic" : false,
+        "isOAuth" : false,
+        "isApiKey" : true,
+        "keyParamName" : "api_key",
+        "isKeyInQuery" : false,
+        "isKeyInHeader" : true
+      } ],
+      "tags" : [ "Store" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : false,
+        "dataType" : "map[string,int]",
+        "baseType" : "map",
+        "containerType" : "map",
+        "isDefault" : true,
+        "simpleType" : false,
+        "primitiveType" : false,
+        "isMapContainer" : true,
+        "isListContainer" : false,
+        "schema" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"type\" : \"object\",\n    \"additionalProperties\" : {\n      \"type\" : \"integer\",\n      \"format\" : \"int32\"\n    }\n  }\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "map" ],
+      "examples" : [ {
+        "example" : "{\n  \"key\" : 123\n}",
+        "contentType" : "application/json"
+      }, {
+        "example" : "not implemented io.swagger.models.properties.MapProperty@3e",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "getInventory",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "returnSimpleType" : true,
+      "hasMore" : true,
+      "path" : "/store/order",
+      "operationId" : "placeOrder",
+      "returnType" : "Order",
+      "httpMethod" : "POST",
+      "returnBaseType" : "Order",
+      "summary" : "Place an order for a pet",
+      "notes" : "",
+      "baseName" : "Store",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "bodyParam" : {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Order",
+        "description" : "order placed for purchasing the pet",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"order placed for purchasing the pet\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Order\"\n  }\n}",
+        "isEnum" : false
+      },
+      "allParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Order",
+        "description" : "order placed for purchasing the pet",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"order placed for purchasing the pet\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Order\"\n  }\n}",
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ {
+        "isBodyParam" : true,
+        "baseName" : "body",
+        "paramName" : "body",
+        "dataType" : "Order",
+        "description" : "order placed for purchasing the pet",
+        "jsonSchema" : "{\n  \"in\" : \"body\",\n  \"name\" : \"body\",\n  \"description\" : \"order placed for purchasing the pet\",\n  \"required\" : false,\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Order\"\n  }\n}"
+      } ],
+      "pathParams" : [ ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "Store" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "Order",
+        "baseType" : "Order",
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : false,
+        "schema" : {
+          "$ref" : "#/definitions/Order"
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Order\"\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid Order",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid Order\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Order" ],
+      "examples" : [ {
+        "example" : "{\n  \"id\" : 123456789,\n  \"petId\" : 123456789,\n  \"complete\" : true,\n  \"status\" : \"aeiou\",\n  \"quantity\" : 123,\n  \"shipDate\" : \"2015-07-05T12:55:13.211+0000\"\n}",
+        "contentType" : "application/json"
+      }, {
+        "example" : "<Order>\n  <id>123456</id>\n  <petId>123456</petId>\n  <quantity>0</quantity>\n  <shipDate>2015-07-05T20:55:13.218Z</shipDate>\n  <status>string</status>\n  <complete>true</complete>\n</Order>",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "placeOrder",
+      "validators" : [ ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "returnSimpleType" : true,
+      "hasMore" : true,
+      "path" : "/store/order/{orderId}",
+      "operationId" : "getOrderById",
+      "returnType" : "Order",
+      "httpMethod" : "GET",
+      "returnBaseType" : "Order",
+      "summary" : "Find purchase order by ID",
+      "notes" : "For valid response try integer IDs with value <= 5 or > 10. Other values will generated exceptions",
+      "baseName" : "Store",
+      "defaultResponse" : "null",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "orderId",
+        "paramName" : "order_id",
+        "dataType" : "string",
+        "description" : "ID of pet that needs to be fetched",
+        "jsonSchema" : "{\n  \"name\" : \"orderId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "orderId",
+        "paramName" : "order_id",
+        "dataType" : "string",
+        "description" : "ID of pet that needs to be fetched",
+        "jsonSchema" : "{\n  \"name\" : \"orderId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of pet that needs to be fetched\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "Store" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "Order not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Order not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "200",
+        "message" : "successful operation",
+        "hasMore" : true,
+        "dataType" : "Order",
+        "baseType" : "Order",
+        "isDefault" : true,
+        "simpleType" : true,
+        "primitiveType" : false,
+        "schema" : {
+          "$ref" : "#/definitions/Order"
+        },
+        "jsonSchema" : "{\n  \"description\" : \"successful operation\",\n  \"schema\" : {\n    \"$ref\" : \"#/definitions/Order\"\n  }\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid ID supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid ID supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ "Order" ],
+      "examples" : [ {
+        "example" : "{\n  \"id\" : 123456789,\n  \"petId\" : 123456789,\n  \"complete\" : true,\n  \"status\" : \"aeiou\",\n  \"quantity\" : 123,\n  \"shipDate\" : \"2015-07-05T12:55:13.222+0000\"\n}",
+        "contentType" : "application/json"
+      }, {
+        "example" : "<Order>\n  <id>123456</id>\n  <petId>123456</petId>\n  <quantity>0</quantity>\n  <shipDate>2015-07-05T20:55:13.222Z</shipDate>\n  <status>string</status>\n  <complete>true</complete>\n</Order>",
+        "contentType" : "application/xml"
+      } ],
+      "nickname" : "getOrderById",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $order_id]\n        ]"
+      } ]
+    }, {
+      "responseHeaders" : [ ],
+      "hasProduces" : true,
+      "hasParams" : true,
+      "path" : "/store/order/{orderId}",
+      "operationId" : "deleteOrder",
+      "httpMethod" : "DELETE",
+      "summary" : "Delete purchase order by ID",
+      "notes" : "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+      "baseName" : "Store",
+      "produces" : [ {
+        "hasMore" : "true",
+        "mediaType" : "application/json"
+      }, {
+        "hasMore" : null,
+        "mediaType" : "application/xml"
+      } ],
+      "allParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "orderId",
+        "paramName" : "order_id",
+        "dataType" : "string",
+        "description" : "ID of the order that needs to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"orderId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of the order that needs to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true,
+        "isEnum" : false
+      } ],
+      "bodyParams" : [ ],
+      "pathParams" : [ {
+        "isPathParam" : true,
+        "baseName" : "orderId",
+        "paramName" : "order_id",
+        "dataType" : "string",
+        "description" : "ID of the order that needs to be deleted",
+        "jsonSchema" : "{\n  \"name\" : \"orderId\",\n  \"in\" : \"path\",\n  \"description\" : \"ID of the order that needs to be deleted\",\n  \"required\" : true,\n  \"type\" : \"string\"\n}",
+        "required" : true
+      } ],
+      "queryParams" : [ ],
+      "headerParams" : [ ],
+      "formParams" : [ ],
+      "tags" : [ "Store" ],
+      "responses" : [ {
+        "headers" : [ ],
+        "code" : "404",
+        "message" : "Order not found",
+        "hasMore" : true,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Order not found\"\n}",
+        "wildcard" : false
+      }, {
+        "headers" : [ ],
+        "code" : "400",
+        "message" : "Invalid ID supplied",
+        "hasMore" : false,
+        "isDefault" : false,
+        "simpleType" : true,
+        "primitiveType" : true,
+        "isMapContainer" : false,
+        "isListContainer" : false,
+        "jsonSchema" : "{\n  \"description\" : \"Invalid ID supplied\"\n}",
+        "wildcard" : false
+      } ],
+      "imports" : [ ],
+      "nickname" : "deleteOrder",
+      "validators" : [ {
+        "validator" : "[\n            ['required' => true, 'value' => $order_id]\n        ]"
+      } ]
+    } ],
+    "classname" : "StoreController"
+  },
+  "invokerPackage" : "PetStore\\V1000",
+  "infoUrl" : null,
+  "licenseUrl" : "http://www.apache.org/licenses/LICENSE-2.0.html",
+  "appDescription" : "This is a sample server Petstore server.  You can find out more about Swagger at <a href=\\\"http://swagger.io\\\">http://swagger.io</a> or on irc.freenode.net, #swagger.  For this sample, you can use the api key \\\"special-key\\\" to test the authorization filters"
+} ]
+############ Supporting file info ############
+

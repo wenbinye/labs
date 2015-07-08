@@ -59,6 +59,7 @@ class Order implements \ArrayAccess {
      * @Valid(type=boolean)
      */
     public $complete; /* boolean */
+
     public function __construct(array $data = null) {
         if ($data === null) {
             return;

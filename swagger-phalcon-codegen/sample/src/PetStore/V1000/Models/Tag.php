@@ -33,6 +33,7 @@ class Tag implements \ArrayAccess {
      * The name.
      */
     public $name; /* string */
+
     public function __construct(array $data = null) {
         if ($data === null) {
             return;

@@ -59,6 +59,7 @@ class Pet implements \ArrayAccess {
      * pet status in the store
      */
     public $status; /* string */
+
     public function __construct(array $data = null) {
         if ($data === null) {
             return;

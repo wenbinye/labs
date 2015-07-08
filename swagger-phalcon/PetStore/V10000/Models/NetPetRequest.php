@@ -1,5 +1,5 @@
 <?php
-namespace PetStore\V10000\Requests;
+namespace PetStore\V10000\Models;
 
 class NetPetRequest
 {
