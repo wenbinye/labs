@@ -49,6 +49,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     static {
         phpValidators.put("IsA", "PhalconX\\Validators\\IsA");
         phpValidators.put("Range", "PhalconX\\Validators\\Range");
+        phpValidators.put("Inclusionin", "Phalcon\\Validation\\Validator\\Inclusionin");
     }
 
     public PhalconCodegen() {
@@ -137,7 +138,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         for (CodegenOperation operation: operations) {
             processOperation((PhpCodegenOperation) operation, objs);
         }
-        operationContext.put((String) operationInfo.get("baseName"), objs);
+        operationContext.put((String) operationInfo.get("classname"), objs);
         return objs;
     }
 
@@ -149,49 +150,50 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         for (CodegenParameter parameter: operation.allParams) {
             if (parameter.isBodyParam == Boolean.TRUE) {
                 createBodyParameterValidator(parameter);
-            }
-            PhpCodegenParameter p = (PhpCodegenParameter) parameter;
-            List<String> params = new ArrayList<String>();
-            params.add("'name' => '" + p.paramName + "'");
-            if (p.defaultValue != null) {
-                params.add("'value' => &$" + p.paramName);
-                params.add("'default' => '" + p.defaultValue.replaceAll("'", "\\'") + "'");
             } else {
-                params.add("'value' => $" + p.paramName);
-            }
-            if (INT_TYPES.contains(p.dataType)) {
-                params.add("'type' => 'integer'");
-            } else if (NUM_TYPES.contains(p.dataType)) {
-                params.add("'type' => 'number'");
-            } else if (BOOLEAN_TYPE.equals(p.dataType)) {
-                params.add("'type' => 'boolean'");
-            } else if (ARRAY_TYPE.equals(p.baseType)) {
-                params.add("'type' => 'array'");
-            }
-            if (p.required == Boolean.TRUE) {
-                params.add("'required' => true");
-            }
-            Joiner joiner = Joiner.on(",\n" + Strings.repeat(" ", baseIndent + 8));
-            if (p.minimum != null || p.maximum != null) {
-                List<String> validatorParams = new ArrayList<String>();
-                if (p.minimum != null) {
-                    validatorParams.add("'minimum' => " + p.minimum);
+                PhpCodegenParameter p = (PhpCodegenParameter) parameter;
+                List<String> params = new ArrayList<String>();
+                params.add("'name' => '" + p.paramName + "'");
+                if (p.defaultValue != null) {
+                    params.add("'value' => &$" + p.paramName);
+                    params.add("'default' => '" + p.defaultValue.replaceAll("'", "\\'") + "'");
+                } else {
+                    params.add("'value' => $" + p.paramName);
                 }
-                if (p.maximum != null) {
-                    validatorParams.add("'maximum' => " + p.maximum);
+                if (INT_TYPES.contains(p.dataType)) {
+                    params.add("'type' => 'integer'");
+                } else if (NUM_TYPES.contains(p.dataType)) {
+                    params.add("'type' => 'number'");
+                } else if (BOOLEAN_TYPE.equals(p.dataType)) {
+                    params.add("'type' => 'boolean'");
+                } else if (p.isContainer == Boolean.TRUE) {
+                    params.add("'type' => 'array'");
                 }
-                if (p.exclusiveMinimum != null) {
-                    validatorParams.add("'exclusiveMinimum' => " + p.exclusiveMinimum);
+                if (p.required == Boolean.TRUE) {
+                    params.add("'required' => true");
                 }
-                if (p.exclusiveMaximum != null) {
-                    validatorParams.add("'exclusiveMaximum' => " + p.exclusiveMaximum);
+                Joiner joiner = Joiner.on(",\n" + Strings.repeat(" ", baseIndent + 8));
+                if (p.minimum != null || p.maximum != null) {
+                    List<String> validatorParams = new ArrayList<String>();
+                    if (p.minimum != null) {
+                        validatorParams.add("'minimum' => " + p.minimum);
+                    }
+                    if (p.maximum != null) {
+                        validatorParams.add("'maximum' => " + p.maximum);
+                    }
+                    if (p.exclusiveMinimum != null) {
+                        validatorParams.add("'exclusiveMinimum' => " + p.exclusiveMinimum);
+                    }
+                    if (p.exclusiveMaximum != null) {
+                        validatorParams.add("'exclusiveMaximum' => " + p.exclusiveMaximum);
+                    }
+                    params.add("'validator' => new Range([" + joiner.join(validatorParams) + "])");
+                    imports.add(createSubElement("import", phpValidators.get("Range")));
                 }
-                params.add("'validator' => new Range([" + joiner.join(validatorParams) + "])");
-                imports.add(createSubElement("import", phpValidators.get("Range")));
-            }
-            if (params.size() > 2) {
-                otherValidators.add("[\n" + Strings.repeat(" ", baseIndent + 8) + joiner.join(params)
-                        + "\n" + Strings.repeat(" ", baseIndent+4) +"]");
+                if (params.size() > 2) {
+                    otherValidators.add("[\n" + Strings.repeat(" ", baseIndent + 8) + joiner.join(params)
+                            + "\n" + Strings.repeat(" ", baseIndent + 4) + "]");
+                }
             }
         }
         if (!otherValidators.isEmpty()) {
@@ -205,10 +207,17 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
 
     private void createBodyParameterValidator(CodegenParameter parameter) {
         List<String> params = new ArrayList<String>();
+        params.add("'name' => '" + parameter.paramName + "'");
         params.add("'value' => $" + parameter.paramName);
         if (parameter.required == Boolean.TRUE) {
             params.add("'required' => true");
         }
+        String validator = "validator";
+        if (parameter.isContainer == Boolean.TRUE) {
+            params.add("'type' => 'array'");
+            validator = "element";
+        }
+        params.add("'"+validator+"' => new IsA(['class' => " + parameter.dataType + "::CLASS])");
         return;
     }
 
@@ -249,6 +258,20 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         for (CodegenProperty property: model.vars) {
             processProperty((PhpCodegenProperty) property, imports);
         }
+        objs.put("imports", filterImports(imports));
+    }
+
+    private Object filterImports(List<Object> imports) {
+        List<Object> filtered = new ArrayList<Object>();
+        Set<String> see = new HashSet<String>();
+        for (Object pkg: imports) {
+            String importPkg = ((Map<String, String>) pkg).get("import");
+            if (!ARRAY_TYPE.equals(importPkg) && !see.contains(importPkg)) {
+                filtered.add(pkg);
+                see.add(importPkg);
+            }
+        }
+        return filtered;
     }
 
     private void processProperty(PhpCodegenProperty property, List<Object> imports) {
@@ -267,10 +290,11 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         } else if (BOOLEAN_TYPE.equals(property.datatype)) {
             params.add("type=boolean");
         } else if (property.isContainer == Boolean.TRUE) {
-            params.add("type=array");
             if (property.complexType != null) {
                 validators.add(createSubElement("validator", "@IsA(\"" + property.complexType + "[]\")"));
                 imports.add(createSubElement("import", phpValidators.get("IsA")));
+            } else {
+                params.add("type=array");
             }
         } else if (property.complexType != null) {
             validators.add(createSubElement("validator", "@IsA(" + property.complexType + ")"));
@@ -297,11 +321,16 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             params.add("validator=@Range(" + joiner.join(validatorParams) + ")");
             imports.add(createSubElement("import", phpValidators.get("Range")));
         }
+        if (property.isEnum == Boolean.TRUE) {
+            params.add("validator=@Inclusionin(domain=["+joiner.join(property._enum)+"])");
+            imports.add(createSubElement("import", phpValidators.get("Inclusionin")));
+        }
         if (!params.isEmpty()) {
             validators.add(createSubElement("validator", "@Valid(" + joiner.join(params) + ")"));
         }
         if (!validators.isEmpty()) {
             property.validators = validators;
+            property.hasValidators = true;
         }
     }
 

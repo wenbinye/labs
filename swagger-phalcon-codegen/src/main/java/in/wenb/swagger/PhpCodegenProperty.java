@@ -10,4 +10,5 @@ import java.util.Map;
  */
 public class PhpCodegenProperty extends CodegenProperty {
     List<Map<String, String>> validators;
+    Boolean hasValidators;
 }
