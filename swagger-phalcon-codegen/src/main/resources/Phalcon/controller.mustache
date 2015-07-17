@@ -29,23 +29,25 @@ use {{import}};
  *
  * @RoutePrefix("{{{contextPath}}}")
  */
-class {{classname}} extends BaseController {
+class {{classname}} extends BaseController
+{
 {{#operation}}
     /**
      * {{{summary}}}
      *
      * @{{httpMethod}}("{{{path}}}")
      */
-    public function {{nickname}}({{#pathParams}}${{paramName}}{{#optional}}=null{{/optional}}{{#hasMore}}, {{/hasMore}}{{/pathParams}}) {
+    public function {{nickname}}({{#pathParams}}${{paramName}}{{#optional}}=null{{/optional}}{{#hasMore}}, {{/hasMore}}{{/pathParams}})
+    {
 {{#allParams}}{{#isQueryParam}}        ${{paramName}} = $this->request->get("{{baseName}}");
 {{/isQueryParam}}{{#isHeaderParam}}        ${{paramName}} = $this->request->getHeader("{{baseName}}");
 {{/isHeaderParam}}{{#isFormParam}}{{#isFile}}        ${{paramName}} = $this->getFile("{{baseName}}");
 {{/isFile}}{{^isFile}}        ${{paramName}} = $this->request->getPost("{{baseName}}");
 {{/isFile}}{{/isFormParam}}{{#isCookieParam}}        ${{paramName}} = $this->cookies->get("{{baseName}}");
-{{/isCookieParam}}{{#isBodyParam}}{{#isContainer}}        ${{paramName}} = $this->objectConverter->convertArray($this->request->getBody(), {{baseType}}::CLASS, 'json');
-{{/isContainer}}{{^isContainer}}        ${{paramName}} = $this->objectConverter->convert($this->request->getBody(), {{dataType}}::CLASS, 'json');
-{{/isContainer}}{{/isBodyParam}}{{/allParams}}{{#validators}}        $this->validator->validate({{{validator}}});
-{{/validators}}        $this->{{classVarName}}Service->{{nickname}}({{#allParams}}${{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+{{/isCookieParam}}{{#isBodyParam}}{{#isContainer}}        ${{paramName}} = $this->objectMapper->arrayMap($this->request->getBody(), {{baseType}}::CLASS, 'json');
+{{/isContainer}}{{^isContainer}}        ${{paramName}} = $this->objectMapper->map($this->request->getBody(), {{dataType}}::CLASS, 'json');
+{{/isContainer}}{{/isBodyParam}}{{/allParams}}{{#hasValidators}}        $this->validator->validate({{{validators}}});
+{{/hasValidators}}        return $this->{{classVarName}}Service->{{nickname}}({{#allParams}}${{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
     }{{#hasMore}}
 
 {{/hasMore}}

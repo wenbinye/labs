@@ -9,6 +9,6 @@ import java.util.Map;
  * Created by ywb on 15-7-7.
  */
 public class PhpCodegenProperty extends CodegenProperty {
-    List<Map<String, String>> validators;
-    Boolean hasValidators;
+    public List<Map<String, String>> validators;
+    public Boolean hasValidators;
 }

@@ -9,5 +9,6 @@ import java.util.Map;
  * Created by ywb on 15-7-5.
  */
 public class PhpCodegenOperation extends CodegenOperation {
-    public List<Map<String, String>> validators;
+    public String validators;
+    public Boolean hasValidators;
 }

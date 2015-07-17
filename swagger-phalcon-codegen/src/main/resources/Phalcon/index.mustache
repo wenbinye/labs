@@ -1,38 +1,40 @@
 <?php
 use Phalcon\DI\FactoryDefault;
-use Phalcon\Loader;
+use Phalcon\Logger\Adapter\Stream as ConsoleLogger;
 use Phalcon\Cache;
 use Phalcon\Mvc\Router\Annotations as RouterAnnotations;
 use Phalcon\Annotations\Adapter\Apc as Annotations;
 use PhalconX\Mvc\Micro;
+use PhalconX\ValidationException;
 
-$loader = new Loader;
-$loader->registerDirs(['.']);
-$loader->register();
+$loader = require(__DIR__.'/vendor/autoload.php');
 
 $di = new FactoryDefault();
 $di['loader'] = $loader;
 
-$di['petService'] = 'PetStore\\V10000\\Services\\PetService';
+$di['logger'] = function() {
+   return new ConsoleLogger('php://stderr');
+};
 $di['validator'] = 'PhalconX\\Validator';
 $di['reflection'] = 'PhalconX\\Reflection';
 $di['objectConverter'] = 'PhalconX\\ObjectConverter';
 $di['annotations'] = Annotations::CLASS;
 $di['cache'] = function() {
     $frontend = new Cache\Frontend\None;
-    return new Cache\Backend\Memory($frontend);
+    return new Cache\Backend\Apc($frontend);
 };
 
 $di['router'] = function() use($di) {
     $router = new RouterAnnotations(false);
     $router->setDI($di);
-    $router->addResource('PetStore\\V10000\Controllers\Pet');
+{{#apiInfo}}{{#apis}}    $router->addResource('{{invokerPackage}}\Controllers\{{baseName}}');
+{{/apis}}{{/apiInfo}}
     return $router;
 };
 
 $app = new Micro($di);
-$app->error(function($e) {
-        echo $e->getMessage(), "\n";
-        echo $e->getTraceAsString();
+$app->error(function($e) use($di) {
+        $di['logger']->error($e->getMessage() . "\n". $e->getTraceAsString());
+        return array('error' => $e->getMessage());
 });
 echo json_encode($app->handle());

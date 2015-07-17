@@ -1,12 +1,15 @@
 package in.wenb.swagger;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import io.swagger.codegen.*;
+import io.swagger.codegen.languages.PhpClientCodegen;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.AbstractSerializableParameter;
@@ -14,16 +17,14 @@ import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Sets;
-import io.swagger.codegen.languages.PhpClientCodegen;
-import io.swagger.util.Json;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     private static final Logger logger = LoggerFactory.getLogger(PhalconCodegen.class);
@@ -43,6 +44,8 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
 
     private static final Map<String, String> phpValidators = new HashMap<String, String>();
 
+    private static final Set<String> excludedImports = new HashSet<String>();
+
     private boolean initAdditionalProperties = false;
     protected String sourceFolder = "src";
 
@@ -50,6 +53,9 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         phpValidators.put("IsA", "PhalconX\\Validators\\IsA");
         phpValidators.put("Range", "PhalconX\\Validators\\Range");
         phpValidators.put("Inclusionin", "Phalcon\\Validation\\Validator\\Inclusionin");
+
+        excludedImports.add("map");
+        excludedImports.add("array");
     }
 
     public PhalconCodegen() {
@@ -124,101 +130,105 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         objs = super.postProcessOperations(objs);
-        objs.put("validatorImports", new ArrayList<Object>());
+        @SuppressWarnings("unchecked")
         List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
-        Iterator<Map<String, String>> it = imports.iterator();
-        while (it.hasNext()) {
-            Map<String, String> oneImport = it.next();
-            if (Strings.isNullOrEmpty(oneImport.get("import"))) {
-                it.remove();
-            }
-        }
+        @SuppressWarnings("unchecked")
         Map<String, Object> operationInfo = ((Map<String, Object>) objs.get("operations"));
+        @SuppressWarnings("unchecked")
         List<CodegenOperation> operations = (List<CodegenOperation>) operationInfo.get("operation");
+        List<Map<String, String>> validatorImports = new ArrayList<Map<String, String>>();
+
         for (CodegenOperation operation: operations) {
-            processOperation((PhpCodegenOperation) operation, objs);
+            processOperation((PhpCodegenOperation) operation, validatorImports);
         }
-        operationContext.put((String) operationInfo.get("classname"), objs);
+        operationContext.put(((String) operationInfo.get("classname")).replace("Controller", ""), objs);
+        objs.put("imports", filterImports(imports));
+        objs.put("validatorImports", filterImports(validatorImports));
         return objs;
     }
 
-    private void processOperation(PhpCodegenOperation operation, Map<String, Object> objs) {
-        List<Object> imports = (List<Object>) objs.get("validatorImports");
-        List<Map<String, String>> validators = new ArrayList<Map<String, String>>();
-        List<String> otherValidators = new ArrayList<String>();
+    private void processOperation(PhpCodegenOperation operation, List<Map<String, String>> imports) {
+        operation.httpMethod = camelize(StringUtils.lowerCase(operation.httpMethod));
+        List<String> validators = new ArrayList<String>();
         int baseIndent = 8;
+        Joiner joiner = Joiner.on(",\n" + Strings.repeat(" ", baseIndent + 8));
         for (CodegenParameter parameter: operation.allParams) {
-            if (parameter.isBodyParam == Boolean.TRUE) {
-                createBodyParameterValidator(parameter);
+            PhpCodegenParameter p = (PhpCodegenParameter) parameter;
+            List<String> params = new ArrayList<String>();
+            params.add("'name' => '" + p.paramName + "'");
+            if (parameter.isBodyParam != null && parameter.isBodyParam) {
+                createBodyParameterValidator(p, params, imports);
             } else {
-                PhpCodegenParameter p = (PhpCodegenParameter) parameter;
-                List<String> params = new ArrayList<String>();
-                params.add("'name' => '" + p.paramName + "'");
-                if (p.defaultValue != null) {
-                    params.add("'value' => &$" + p.paramName);
-                    params.add("'default' => '" + p.defaultValue.replaceAll("'", "\\'") + "'");
-                } else {
-                    params.add("'value' => $" + p.paramName);
-                }
-                if (INT_TYPES.contains(p.dataType)) {
-                    params.add("'type' => 'integer'");
-                } else if (NUM_TYPES.contains(p.dataType)) {
-                    params.add("'type' => 'number'");
-                } else if (BOOLEAN_TYPE.equals(p.dataType)) {
-                    params.add("'type' => 'boolean'");
-                } else if (p.isContainer == Boolean.TRUE) {
-                    params.add("'type' => 'array'");
-                }
-                if (p.required == Boolean.TRUE) {
-                    params.add("'required' => true");
-                }
-                Joiner joiner = Joiner.on(",\n" + Strings.repeat(" ", baseIndent + 8));
-                if (p.minimum != null || p.maximum != null) {
-                    List<String> validatorParams = new ArrayList<String>();
-                    if (p.minimum != null) {
-                        validatorParams.add("'minimum' => " + p.minimum);
-                    }
-                    if (p.maximum != null) {
-                        validatorParams.add("'maximum' => " + p.maximum);
-                    }
-                    if (p.exclusiveMinimum != null) {
-                        validatorParams.add("'exclusiveMinimum' => " + p.exclusiveMinimum);
-                    }
-                    if (p.exclusiveMaximum != null) {
-                        validatorParams.add("'exclusiveMaximum' => " + p.exclusiveMaximum);
-                    }
-                    params.add("'validator' => new Range([" + joiner.join(validatorParams) + "])");
-                    imports.add(createSubElement("import", phpValidators.get("Range")));
-                }
-                if (params.size() > 2) {
-                    otherValidators.add("[\n" + Strings.repeat(" ", baseIndent + 8) + joiner.join(params)
-                            + "\n" + Strings.repeat(" ", baseIndent + 4) + "]");
-                }
+                createParameterValidator(p, params, imports);
+            }
+
+            // name, value are default element
+            if (params.size() > 2) {
+                validators.add("[\n" + Strings.repeat(" ", baseIndent + 8) + joiner.join(params)
+                        + "\n" + Strings.repeat(" ", baseIndent + 4) + "]");
             }
         }
-        if (!otherValidators.isEmpty()) {
+        if (!validators.isEmpty()) {
             String indent = Strings.repeat(" ", baseIndent+4);
-            validators.add(createSubElement("validator", "[\n" + indent
-                    + Joiner.on(",\n" + indent).join(otherValidators)
-                    + "\n"+Strings.repeat(" ", baseIndent)+"]"));
+            operation.validators = "[\n" + indent
+                    + Joiner.on(",\n" + indent).join(validators)
+                    + "\n" + Strings.repeat(" ", baseIndent) + "]";
+            operation.hasValidators = true;
         }
-        operation.validators = validators;
     }
 
-    private void createBodyParameterValidator(CodegenParameter parameter) {
-        List<String> params = new ArrayList<String>();
-        params.add("'name' => '" + parameter.paramName + "'");
+    private void createParameterValidator(PhpCodegenParameter parameter, List<String> params, List<Map<String, String>> imports) {
+        if (parameter.defaultValue != null) {
+            params.add("'value' => &$" + parameter.paramName);
+            params.add("'default' => '" + parameter.defaultValue.replaceAll("'", "\\'") + "'");
+        } else {
+            params.add("'value' => $" + parameter.paramName);
+        }
+        if (INT_TYPES.contains(parameter.dataType)) {
+            params.add("'type' => 'integer'");
+        } else if (NUM_TYPES.contains(parameter.dataType)) {
+            params.add("'type' => 'number'");
+        } else if (BOOLEAN_TYPE.equals(parameter.dataType)) {
+            params.add("'type' => 'boolean'");
+        } else if (parameter.isContainer != null && parameter.isContainer) {
+            params.add("'type' => 'array'");
+        }
+        if (parameter.required != null && parameter.required) {
+            params.add("'required' => true");
+        }
+        if (parameter.minimum != null || parameter.maximum != null) {
+            List<String> validatorParams = new ArrayList<String>();
+            if (parameter.minimum != null) {
+                validatorParams.add("'minimum' => " + parameter.minimum);
+            }
+            if (parameter.maximum != null) {
+                validatorParams.add("'maximum' => " + parameter.maximum);
+            }
+            if (parameter.exclusiveMinimum != null) {
+                validatorParams.add("'exclusiveMinimum' => " + parameter.exclusiveMinimum);
+            }
+            if (parameter.exclusiveMaximum != null) {
+                validatorParams.add("'exclusiveMaximum' => " + parameter.exclusiveMaximum);
+            }
+            params.add("'validator' => new Range([" + Joiner.on(", ").join(validatorParams) + "])");
+            imports.add(createSubElement("import", phpValidators.get("Range")));
+        }
+    }
+
+    private void createBodyParameterValidator(CodegenParameter parameter, List<String> params, List<Map<String, String>> imports) {
         params.add("'value' => $" + parameter.paramName);
-        if (parameter.required == Boolean.TRUE) {
+        if (parameter.required != null && parameter.required) {
             params.add("'required' => true");
         }
         String validator = "validator";
-        if (parameter.isContainer == Boolean.TRUE) {
+        String dataType = parameter.dataType;
+        if (parameter.isContainer != null && parameter.isContainer) {
             params.add("'type' => 'array'");
             validator = "element";
+            dataType = parameter.baseType;
         }
-        params.add("'"+validator+"' => new IsA(['class' => " + parameter.dataType + "::CLASS])");
-        return;
+        params.add("'"+validator+"' => new IsA(['class' => " + dataType + "::CLASS])");
+        imports.add(createSubElement("import", phpValidators.get("IsA")));
     }
 
     private Map<String,String> createSubElement(String key, String content) {
@@ -241,7 +251,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             } else if (property instanceof ArrayProperty) {
                 parameter.baseType = ARRAY_TYPE;
             }
-        } else if (param instanceof BodyParameter && parameter.isContainer == Boolean.TRUE) {
+        } else if (param instanceof BodyParameter && parameter.isContainer != null && parameter.isContainer) {
             BodyParameter bp = (BodyParameter) param;
             ArrayModel schema = (ArrayModel) bp.getSchema();
             parameter.baseType = ((RefProperty) schema.getItems()).getSimpleRef();
@@ -254,19 +264,21 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         if (Strings.isNullOrEmpty(model.description)) {
             model.description = "The model " + model.name + ".";
         }
-        List<Object> imports = (List<Object>) objs.get("imports");
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> imports = (List<Map<String, String>>) objs.get("imports");
         for (CodegenProperty property: model.vars) {
             processProperty((PhpCodegenProperty) property, imports);
         }
         objs.put("imports", filterImports(imports));
     }
 
-    private Object filterImports(List<Object> imports) {
-        List<Object> filtered = new ArrayList<Object>();
+    private List<Map<String, String>> filterImports(List<Map<String, String>> imports) {
+        List<Map<String, String>> filtered = new ArrayList<Map<String, String>>();
         Set<String> see = new HashSet<String>();
-        for (Object pkg: imports) {
-            String importPkg = ((Map<String, String>) pkg).get("import");
-            if (!ARRAY_TYPE.equals(importPkg) && !see.contains(importPkg)) {
+        for (Map<String, String> pkg: imports) {
+            String importPkg = pkg.get("import");
+            if (!Strings.isNullOrEmpty(importPkg) && !excludedImports.contains(importPkg)
+                    && !see.contains(importPkg)) {
                 filtered.add(pkg);
                 see.add(importPkg);
             }
@@ -274,7 +286,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         return filtered;
     }
 
-    private void processProperty(PhpCodegenProperty property, List<Object> imports) {
+    private void processProperty(PhpCodegenProperty property, List<Map<String, String>> imports) {
         if (Strings.isNullOrEmpty(property.description)) {
             property.description = "The " + property.name + ".";
         }
@@ -289,7 +301,8 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             params.add("type=number");
         } else if (BOOLEAN_TYPE.equals(property.datatype)) {
             params.add("type=boolean");
-        } else if (property.isContainer == Boolean.TRUE) {
+        } else if (property.isContainer != null && property.isContainer) {
+            params.add("type=array");
             if (property.complexType != null) {
                 validators.add(createSubElement("validator", "@IsA(\"" + property.complexType + "[]\")"));
                 imports.add(createSubElement("import", phpValidators.get("IsA")));
@@ -321,7 +334,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
             params.add("validator=@Range(" + joiner.join(validatorParams) + ")");
             imports.add(createSubElement("import", phpValidators.get("Range")));
         }
-        if (property.isEnum == Boolean.TRUE) {
+        if (property.isEnum) {
             params.add("validator=@Inclusionin(domain=["+joiner.join(property._enum)+"])");
             imports.add(createSubElement("import", phpValidators.get("Inclusionin")));
         }
@@ -366,10 +379,15 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
 
     @Override
     public String toModelImport(String name) {
-        if (ARRAY_TYPE.equals(name)) {
+        if (excludedImports.contains(name)) {
             return "";
         }
         return modelPackage() + NAMESPACE_SEPARATOR + name;
+    }
+
+    @Override
+    public String toApiName(String name) {
+        return name.length() == 0 ? "IndexController" : this.initialCaps(name) + "Controller";
     }
 
     @Override
@@ -390,7 +408,7 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
         List<String> versions = Splitter.on(".").splitToList(version);
         if (versions.size()>=2) {
-            return String.format("V%s%03d", versions.get(0), Integer.parseInt(versions.get(1)));
+            return String.format("V%s", versions.get(0));
         } else {
             return "V" + versions.get(0);
         }
@@ -400,26 +418,27 @@ public class PhalconCodegen extends PhpClientCodegen implements CodegenConfig {
     public void processSwagger(Swagger swagger) {
         super.processSwagger(swagger);
         if (System.getProperty("debugData") != null) {
-            try {
-                for (String modelName: modelContext.keySet()) {
-                    File modelDataFile = new File(outputFolder, "models/" + modelName + ".json");
-                    if (!modelDataFile.getParentFile().exists()) {
-                        modelDataFile.getParentFile().mkdirs();
-                    }
-                    logger.info("create data file {}", modelDataFile);
-                    IOUtils.write(Json.pretty(modelContext.get(modelName)), new FileOutputStream(modelDataFile));
-                }
-                for (String apiName: operationContext.keySet()) {
-                    File apiDataFile = new File(outputFolder, "apis/" + apiName + ".json");
-                    if (!apiDataFile.getParentFile().exists()) {
-                        apiDataFile.getParentFile().mkdirs();
-                    }
-                    logger.info("create data file {}", apiDataFile);
-                    IOUtils.write(Json.pretty(operationContext.get(apiName)), new FileOutputStream(apiDataFile));
-                }
-            } catch (IOException e) {
-                logger.error("", e);
+            saveVars();
+        }
+    }
+
+    private void saveVars() {
+        try {
+            saveVar(modelContext, "models");
+            saveVar(operationContext, "apis");
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+    }
+
+    private void saveVar(Map<String, ?> vars, String path) throws IOException {
+        for (String varName: vars.keySet()) {
+            File outfile = new File(outputFolder, path + "/" + varName + ".json");
+            if (!outfile.getParentFile().exists() && !outfile.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create directory for file " + outfile);
             }
+            logger.info("create data file {}", outfile);
+            IOUtils.write(JSON.toJSONString(vars.get(varName), SerializerFeature.PrettyFormat), new FileOutputStream(outfile));
         }
     }
 }

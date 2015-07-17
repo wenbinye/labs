@@ -1,0 +1,39 @@
+{
+  "name": "{{namespace}}/{{namespace}}-php",
+  "description": "{{description}}",
+  "keywords": [
+    "swagger",
+    "php",
+    "sdk",
+    "api"
+  ],
+  "homepage": "http://swagger.io",
+  "license": "Apache v2",
+  "authors": [
+    {
+      "name": "Ye Wenbin",
+      "homepage": "https://github.com/wenbinye/swagger-codegen-phalcon"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/wenbinye/PhalconX"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "wenbinye/php-phalconx": "dev-master",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0",
+    "satooshi/php-coveralls": "~0.6.1",
+    "squizlabs/php_codesniffer": "~2.0"
+  },
+  "autoload": {
+    "psr-0": { "{{namespace}}\\" : "src/" }
+  }
+}
